@@ -13,20 +13,12 @@ Juan Felipe Vega -
 
 # Estructura del repositorio
 MediRed-Nocturna-g2/
-├── ms-usuarios/              # Microservicio de plantilla de la profesora; se  ajustaron los roles de acuerdo a nuestra empresa (MediRed).
-├── ms-pacientes/             # Microservicio del servicio pacientes; se le hicieron  configuraciones especificas para el microservicio.
-│   ├── src/
-│   │   ├── controllers/      # Controladores de peticiones HTTP
-│   │   ├── models/           # Modelos y validaciones de datos
-│   │   ├── repositories/     # Capa de acceso y gestión de datos (en memoria)
-│   │   ├── services/         # Lógica de negocio
-│   │   └── app.js            # Punto de entrada del servidor
-│   ├── .env.example          # Plantilla de variables de entorno
-│   └── package.json          # Configuración y dependencias del proyecto
-│
-├── ms-medicos/               # [Espacio reservado para que el responsable complete la descripción de médicos]
-├── ms-citas/                 # [Espacio reservado para que el responsable complete la descripción de citas]
-└── ms-historias/             # [Espacio reservado para que el responsable complete la descripción de historias clínicas]
+├── README.md            # Documentación general del proyecto y del grupo
+├── ms-usuarios/         # Microservicio base de autenticación y roles de usuario (proporcionado por la docente)
+├── ms-pacientes/        # Microservicio de gestión de información y datos de pacientes
+├── ms-medicos/          # Microservicio de gestión de cuerpo médico y especialidades
+├── ms-citas/            # Microservicio de programación y gestión de citas médicas
+└── ms-historias/        # Microservicio de gestión de historias clínicas y registros médicos
 
 # Como ejecutar el microservicio
  Se debe de instalar node.js desde el navegador web a preferencia, posteriormente se abrira la carpeta con em micro servicio, en la terminal (CMD) de nuestro editor de codigo en este caso visual studio deberemos de abrir la ruta con el comando cd  ms-(microservicio) con la carpeta en la terminar deberemos de colocar el comando npm install esto nos instalara express y con esto ya podremos crear el .env  cuando el env este creado, solamente con el npm run dev podremos correr el microservicio si el microservicio funciona en la terminal se mostraara en que puerto esta y en link en el localhost, para comprobar su funcionamiento deberemos de solamente en nuestro navegador web copiar este link y la ruta especifica si se muestra un archivo json comprobaremos que el microservicio funciona.
