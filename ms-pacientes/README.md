@@ -13,7 +13,7 @@ copy .env.example .env      # en Windows (en Linux/Mac: cp .env.example .env)
 npm run dev               # inicia y se reinicia solo al guardar cambios
 ```
 
-Prueben en el navegador: http://localhost:3002/health y http://localhost:3001/pacientes
+Prueben en el navegador: http://localhost:3002/health y http://localhost:3002/pacientes
 
 ## Capas
 
