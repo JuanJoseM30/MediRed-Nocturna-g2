@@ -6,10 +6,12 @@
 // Todas las funciones son async (devuelven promesas) para que el cambio
 // a una base de datos real no obligue a modificar la capa de servicio.
 // =====================================================================
+const HttpError = require('../utils/http-error');
+
 const pacientes = [
-  { id: 1, nombre: 'Administrador General', documento: '1', fecha_nacimiento: 'octubre', EPS: 'Suramericana', telefono: 123456789, "rol": "admisiones" },
-  { id: 2, nombre: 'Laura Gómez', documento: '2', fecha_nacimiento: 'noviembre', EPS: 'Sura', telefono: 123456789, "rol": "administrador" },
-  { id: 3, nombre: 'Andrés Castillo', documento: '3', fecha_nacimiento: 'diciembre', EPS: 'Sura', telefono: 123456789, "rol": "medico" },
+  { id: 1, nombre: 'Administrador General', documento: 1, fecha_nacimiento: '1990-10-15', EPS: 'Nueva EPS', telefono: 123456789 },
+  { id: 2, nombre: 'Laura Gómez', documento: 2, fecha_nacimiento: '1995-11-20', EPS: 'Sura', telefono: 123456789 },
+  { id: 3, nombre: 'Andrés Castillo', documento: 3, fecha_nacimiento: '2000-12-05', EPS: 'Colsanitas', telefono: 123456789 },
 ];
 let siguienteId = 4;
 
@@ -18,14 +20,19 @@ async function findAll() {
 }
 
 async function findById(id) {
-  return pacientes.find((p) => String(p.id) === String(id)) || null;
+  return pacientes.find((p) => Number(p.id) === Number(id)) || null;
 }
 
 async function findByDocumento(documento) {
-  return pacientes.find((p) => String(p.documento) === String(documento)) || null;
+  return pacientes.find((p) => Number(p.documento) === Number(documento)) || null;
 }
 
 async function create(paciente) {
+  const existe = await findByDocumento(paciente.documento);
+  if (existe) {
+    throw new HttpError(409, 'El documento del paciente ya se encuentra registrado');
+  }
+
   const nuevo = { id: siguienteId++, ...paciente };
   pacientes.push(nuevo);
   return nuevo;
