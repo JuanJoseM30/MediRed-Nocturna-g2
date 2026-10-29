@@ -1,4 +1,4 @@
-# ms-pacienyes · Taller 1 (Módulo 3)
+# ms-pacientes · Taller 1 (Módulo 3)
 
 Redes y Servicios Multimedia · UAO · Microservicio de **pacientes** de la aplicación,
 organizado en arquitectura limpia por capas.
