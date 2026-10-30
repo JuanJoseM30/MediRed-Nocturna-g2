@@ -3,14 +3,16 @@ Este proyecto implementa una arquitectura en capas basada en microservicios, org
 # Integrantes: 
 Juan Jose Marin  - 2235452 - JuanJoseM30 - ms-pacientes
 Santiago Garzon  - 2235761 - 
-Jhoan Esteban Burgos - 
+Jhoan Esteban Burgos - 2225003 - JhoanBurgos - ms-medicos
 Juan Felipe Vega - 2225527 - juan-felvega - ms-historias
 # Tabla de Microservicios 
 | Carpeta | Entidad | Responsable | Puerto | Dependencias |
 | :--- | :--- | :--- | :--- | :--- |
 |`ms-usuarios` | Usuarios / Autenticación | Plantilla hecha por la profesora | 3001 | Ninguna (Autónomo) |
 | `ms-pacientes` | Pacientes | Juan José Marín | 3002 | Ninguna (Autónomo) |
+| `ms-médicos` | Médicos | Jhoan Esteban Burgos | 3003 | Ninguna (Autónomo) |
 | `ms-historias` | Historias clínicas | Juan Felipe Vega | 3005 | ms-pacientes, ms-medicos |
+
 
 
 # Estructura del repositorio
