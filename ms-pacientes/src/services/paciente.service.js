@@ -7,8 +7,8 @@ const repo = require('../repositories/paciente.repository');
 const { validarPaciente, construirPaciente } = require('../models/paciente');
 const HttpError = require('../utils/http-error');
 
-async function listar() {
-  return repo.findAll();
+async function listar(filtros) {
+  return repo.findAll(filtros);
 }
 
 async function obtener(documento) {
@@ -31,4 +31,28 @@ async function crear(datos) {
   return repo.create(paciente);
 }
 
-module.exports = { listar, obtener, crear };
+async function actualizar(id, datos) {
+  const errores = validarPaciente(datos);
+  if (errores.length > 0) throw new HttpError(400, 'Datos inválidos', errores);
+
+  const paciente = construirPaciente(datos);
+
+  // Regla de negocio: no puede haber dos pacientes con el mismo documento
+  const pacienteExistente = await repo.findByDocumento(paciente.documento);
+  if (pacienteExistente && pacienteExistente.id !== id) {
+    throw new HttpError(409, `Ya existe un paciente con el documento ${paciente.documento}`);
+  }
+
+  const actualizado = await repo.update(id, paciente);
+  if (!actualizado) throw new HttpError(404, `No existe el paciente con id ${id}`);
+
+  return actualizado;
+}
+
+async function eliminar(id) {
+  const eliminado = await repo.remove(id);
+  if (!eliminado) throw new HttpError(404, `No existe el paciente con id ${id}`);
+}
+
+module.exports = { listar, obtener, crear, actualizar, eliminar };
+
