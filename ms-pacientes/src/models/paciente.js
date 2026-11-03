@@ -31,14 +31,17 @@ function validarPaciente(datos) {
     errores.push('documento es obligatorio y debe ser de tipo float (numérico)');
   }
 
-  // fecha_nacimiento: tipo date (validando formato YYYY-MM-DD y que sea una fecha real)
+  // fecha_nacimiento: tipo date (validando formato YYYY-MM-DD, fecha real y que no sea futura)
   const fechaStr = String(datos.fecha_nacimiento || '').trim();
   if (!fechaStr || !FECHA_VALIDA.test(fechaStr) || isNaN(Date.parse(fechaStr))) {
     errores.push('fecha_nacimiento es obligatoria y debe tener un formato de fecha válido (YYYY-MM-DD)');
   } else {
-    const fechaNac = new Date(fechaStr);
+    // Añadimos 'T00:00:00' para que JavaScript interprete la fecha correctamente en la zona horaria local
+    const fechaNacimiento = new Date(fechaStr + 'T00:00:00');
     const hoy = new Date();
-    if (fechaNac > hoy) {
+    hoy.setHours(0, 0, 0, 0); // Normalizamos las horas para comparar solo el día
+
+    if (fechaNacimiento > hoy) {
       errores.push('la fecha de nacimiento no puede ser una fecha futura');
     }
   }
