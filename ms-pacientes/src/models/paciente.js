@@ -4,7 +4,7 @@
 // =====================================================================
 
 function epsValidas() {
-  return (process.env.EPS || 'Sura, Colsanitas, suramericana')
+  return (process.env.EPS || process.env.eps || 'Sura, Colsanitas, suramericana')
     .split(',')
     .map((e) => e.trim())
     .filter((e) => e !== '');
@@ -46,14 +46,14 @@ function validarPaciente(datos) {
     }
   }
 
-  // EPS: texto obligatorio dentro de las permitidas
+  // eps: texto obligatorio dentro de las permitidas
   const listaEps = epsValidas();
   const epsIngresada = datos.EPS || datos.eps;
   const esEpsValida = listaEps.some(
     (e) => e.toLowerCase() === String(epsIngresada || '').trim().toLowerCase()
   );
   if (!epsIngresada || !esEpsValida) {
-    errores.push(`EPS debe ser una de: ${listaEps.join(', ')}`);
+    errores.push(`eps debe ser una de: ${listaEps.join(', ')}`);
   }
 
   // teléfono: float obligatorio
@@ -70,7 +70,7 @@ function construirPaciente(datos) {
     nombre: String(datos.nombre).trim(),
     documento: Number(datos.documento),
     fecha_nacimiento: String(datos.fecha_nacimiento).trim(),
-    EPS: String(datos.EPS || datos.eps).trim(),
+    eps: String(datos.eps || datos.EPS || '').trim(),
     telefono: Number(datos.telefono)
   };
 }
