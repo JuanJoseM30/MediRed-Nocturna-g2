@@ -7,13 +7,14 @@ const repo = require('../repositories/paciente.repository');
 const { validarPaciente, construirPaciente } = require('../models/paciente');
 const HttpError = require('../utils/http-error');
 
-async function listar() {
-  return repo.findAll();
+async function listar(filtros) {
+  return repo.findAll(filtros);
 }
 
-async function obtener(documento) {
-  const paciente = await repo.findByDocumento(documento);
-  if (!paciente) throw new HttpError(404, `No existe el paciente con documento ${documento}`);
+async function obtener(id) {
+  // CORREGIDO: Se busca estrictamente por ID (no por documento) para respetar el contrato
+  const paciente = await repo.findById(id);
+  if (!paciente) throw new HttpError(404, `No existe el paciente con id ${id}`);
   return paciente;
 }
 
@@ -23,7 +24,7 @@ async function crear(datos) {
 
   const paciente = construirPaciente(datos);
 
-  // Regla de negocio: no puede haber dos pacientes con el mismo documento
+  // Regla de negocio (409): No puede haber dos pacientes con el mismo documento
   if (await repo.findByDocumento(paciente.documento)) {
     throw new HttpError(409, `Ya existe un paciente con el documento ${paciente.documento}`);
   }
@@ -31,4 +32,27 @@ async function crear(datos) {
   return repo.create(paciente);
 }
 
-module.exports = { listar, obtener, crear };
+async function actualizar(id, datos) {
+  const errores = validarPaciente(datos);
+  if (errores.length > 0) throw new HttpError(400, 'Datos inválidos', errores);
+
+  const paciente = construirPaciente(datos);
+
+  // Regla de negocio (409): Verificar que el documento no pertenezca a OTRO paciente diferente
+  const pacienteExistente = await repo.findByDocumento(paciente.documento);
+  if (pacienteExistente && Number(pacienteExistente.id) !== Number(id)) {
+    throw new HttpError(409, `Ya existe otro paciente con el documento ${paciente.documento}`);
+  }
+
+  const actualizado = await repo.update(id, paciente);
+  if (!actualizado) throw new HttpError(404, `No existe el paciente con id ${id}`);
+
+  return actualizado;
+}
+
+async function eliminar(id) {
+  const eliminado = await repo.remove(id);
+  if (!eliminado) throw new HttpError(404, `No existe el paciente con id ${id}`);
+}
+
+module.exports = { listar, obtener, crear, actualizar, eliminar };

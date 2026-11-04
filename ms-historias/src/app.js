@@ -3,7 +3,7 @@
 // Aquí se registran los middlewares, las rutas y el manejo de errores.
 // =====================================================================
 const express = require('express');
-const historiasRoutes = require('./routes/historias.routes');
+const historiasRoutes = require('./routes/historias.routes.js');
 
 const app = express();
 

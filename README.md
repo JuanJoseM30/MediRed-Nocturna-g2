@@ -1,18 +1,29 @@
 # MEDIRED-NOCTURNO-G1
+
 Este proyecto implementa una arquitectura en capas basada en microservicios, organizada en capas independientes (controladores, servicios, modelos y repositorios) para gestionar de forma escalable la lógica de negocio y el acceso a datos de la plataforma MediRed.
-# Integrantes: 
-Juan Jose Marin  - 2235452 - JuanJoseM30 - ms-pacientes
-Santiago Garzon  - 2235761 - 
-Jhoan Esteban Burgos - 2225003 - JhoanBurgos - ms-medicos
-Juan Felipe Vega - 2225527 - juan-felvega - ms-historias
-# Tabla de Microservicios 
+
+---
+
+# Integrantes
+
+* **Juan Jose Marin** - 2235452 - `JuanJoseM30` - `ms-pacientes`
+* **Santiago Garzon** - 2235761 - `SantiGarGomez` - `ms-citas`
+* **Jhoan Esteban Burgos** - 2225003 - `JhoanBurgos` - `ms-medicos`
+* **Juan Felipe Vega** - 2225527 - `juan-felvega` - `ms-historias`
+
+---
+
+# Tabla de Microservicios
+
 | Carpeta | Entidad | Responsable | Puerto | Dependencias |
 | :--- | :--- | :--- | :--- | :--- |
-|`ms-usuarios` | Usuarios / Autenticación | Plantilla hecha por la profesora | 3001 | Ninguna (Autónomo) |
+| `ms-usuarios` | Usuarios / Autenticación | Plantilla hecha por la profesora | 3001 | Ninguna (Autónomo) |
 | `ms-pacientes` | Pacientes | Juan José Marín | 3002 | Ninguna (Autónomo) |
-| `ms-médicos` | Médicos | Jhoan Esteban Burgos | 3003 | Ninguna (Autónomo) |
-| `ms-historias` | Historias clínicas | Juan Felipe Vega | 3005 | ms-pacientes, ms-medicos |
+| `ms-medicos` | Médicos | Jhoan Esteban Burgos | 3003 | Ninguna (Autónomo) |
+| `ms-citas` | Citas médicas | Santiago Garzón | 3004 | `ms-pacientes`, `ms-medicos` |
+| `ms-historias` | Historias clínicas | Juan Felipe Vega | 3005 | `ms-pacientes`, `ms-medicos` |
 
+---
 
 
 # Estructura del repositorio

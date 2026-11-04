@@ -4,7 +4,7 @@
 // =====================================================================
 
 function epsValidas() {
-  return (process.env.EPS || 'Sura, Colsanitas, suramericana')
+  return (process.env.EPS || process.env.eps || 'Sura, Colsanitas, suramericana')
     .split(',')
     .map((e) => e.trim())
     .filter((e) => e !== '');
@@ -31,26 +31,29 @@ function validarPaciente(datos) {
     errores.push('documento es obligatorio y debe ser de tipo float (numérico)');
   }
 
-  // fecha_nacimiento: tipo date (validando formato YYYY-MM-DD y que sea una fecha real)
+  // fecha_nacimiento: tipo date (validando formato YYYY-MM-DD, fecha real y que no sea futura)
   const fechaStr = String(datos.fecha_nacimiento || '').trim();
   if (!fechaStr || !FECHA_VALIDA.test(fechaStr) || isNaN(Date.parse(fechaStr))) {
     errores.push('fecha_nacimiento es obligatoria y debe tener un formato de fecha válido (YYYY-MM-DD)');
   } else {
-    const fechaNac = new Date(fechaStr);
+    // Añadimos 'T00:00:00' para que JavaScript interprete la fecha correctamente en la zona horaria local
+    const fechaNacimiento = new Date(fechaStr + 'T00:00:00');
     const hoy = new Date();
-    if (fechaNac > hoy) {
+    hoy.setHours(0, 0, 0, 0); // Normalizamos las horas para comparar solo el día
+
+    if (fechaNacimiento > hoy) {
       errores.push('la fecha de nacimiento no puede ser una fecha futura');
     }
   }
 
-  // EPS: texto obligatorio dentro de las permitidas
+  // eps: texto obligatorio dentro de las permitidas
   const listaEps = epsValidas();
   const epsIngresada = datos.EPS || datos.eps;
   const esEpsValida = listaEps.some(
     (e) => e.toLowerCase() === String(epsIngresada || '').trim().toLowerCase()
   );
   if (!epsIngresada || !esEpsValida) {
-    errores.push(`EPS debe ser una de: ${listaEps.join(', ')}`);
+    errores.push(`eps debe ser una de: ${listaEps.join(', ')}`);
   }
 
   // teléfono: float obligatorio
@@ -67,7 +70,7 @@ function construirPaciente(datos) {
     nombre: String(datos.nombre).trim(),
     documento: Number(datos.documento),
     fecha_nacimiento: String(datos.fecha_nacimiento).trim(),
-    EPS: String(datos.EPS || datos.eps).trim(),
+    eps: String(datos.eps || datos.EPS || '').trim(),
     telefono: Number(datos.telefono)
   };
 }
