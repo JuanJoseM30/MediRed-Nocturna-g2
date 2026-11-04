@@ -7,8 +7,29 @@ const repo = require('../repositories/historias.repository');
 const { validarHistoria, construirHistoria } = require('../models/historia');
 const HttpError = require('../utils/http-error');
 
-async function listar() {
-  return repo.findAll();
+// Fecha de hoy en formato AAAA-MM-DD, según la hora local del equipo
+function fechaDeHoy() {
+  return new Date().toLocaleDateString('en-CA');
+}
+
+// Valida los datos, aplica la regla de negocio y devuelve la historia limpia
+function prepararHistoria(datos) {
+  const errores = validarHistoria(datos);
+  if (errores.length > 0) throw new HttpError(400, 'Datos inválidos', errores);
+
+  const historia = construirHistoria(datos);
+
+  // Regla de negocio: una atención no puede registrarse con fecha futura
+  // (la historia clínica registra consultas que ya ocurrieron). 400.
+  if (historia.fecha > fechaDeHoy()) {
+    throw new HttpError(400, 'Datos inválidos', ['fecha no puede ser posterior a hoy']);
+  }
+
+  return historia;
+}
+
+async function listar(filtros) {
+  return repo.findAll(filtros);
 }
 
 async function obtener(id) {
@@ -18,30 +39,20 @@ async function obtener(id) {
 }
 
 async function crear(datos) {
-  const errores = validarHistoria(datos);
-  if (errores.length > 0) throw new HttpError(400, 'Datos inválidos', errores);
-
-  const historia = construirHistoria(datos);
-
-  // Regla de negocio: una atención no puede registrarse con fecha futura
-  // (la historia clínica registra consultas que ya ocurrieron).
-  const hoy = new Date().toISOString().slice(0, 10);
-  if (historia.fecha > hoy) {
-    throw new HttpError(400, 'Datos inválidos', ['fecha no puede ser posterior a hoy']);
-  }
-
+  const historia = prepararHistoria(datos);
   return repo.create(historia);
 }
 
 async function actualizar(id, datos) {
-  const errores = validarHistoria(datos);
-  if (errores.length > 0) throw new HttpError(400, 'Datos inválidos', errores);
-
-  const historia = construirHistoria(datos);
-
+  const historia = prepararHistoria(datos);   // misma validación y regla que crear
   const actualizada = await repo.update(id, historia);
   if (!actualizada) throw new HttpError(404, `No existe la historia con id ${id}`);
   return actualizada;
 }
 
-module.exports = { listar, obtener, crear, actualizar };
+async function eliminar(id) {
+  const eliminada = await repo.remove(id);
+  if (!eliminada) throw new HttpError(404, `No existe la historia con id ${id}`);
+}
+
+module.exports = { listar, obtener, crear, actualizar, eliminar };

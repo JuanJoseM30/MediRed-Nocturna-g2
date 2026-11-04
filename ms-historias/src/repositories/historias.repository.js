@@ -13,8 +13,10 @@ const historias = [
 ];
 let siguienteId = 4;
 
-async function findAll() {
-  return historias;
+// Filtro: ?paciente_id=1 (en el Taller 2 se vuelve un WHERE de MySQL)
+async function findAll(filtros = {}) {
+  return historias.filter((h) =>
+    !filtros.paciente_id || h.paciente_id === filtros.paciente_id);
 }
 
 async function findById(id) {
@@ -34,4 +36,11 @@ async function update(id, historia) {
   return historias[i];
 }
 
-module.exports = { findAll, findById, create, update };
+async function remove(id) {
+  const i = historias.findIndex((h) => h.id === id);
+  if (i === -1) return false;
+  historias.splice(i, 1);
+  return true;
+}
+
+module.exports = { findAll, findById, create, update, remove };

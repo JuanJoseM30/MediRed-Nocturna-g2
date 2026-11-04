@@ -12,9 +12,16 @@ function leerId(req) {
   return id;
 }
 
-// GET /historias
+// GET /historias  y  GET /historias?paciente_id=1
 async function listar(req, res) {
-  const historias = await service.listar();
+  const filtros = {};
+  if (req.query.paciente_id !== undefined) {
+    filtros.paciente_id = Number(req.query.paciente_id);
+    if (!Number.isInteger(filtros.paciente_id) || filtros.paciente_id <= 0) {
+      throw new HttpError(400, 'paciente_id debe ser un entero positivo');
+    }
+  }
+  const historias = await service.listar(filtros);
   res.status(200).json(historias);
 }
 
@@ -36,4 +43,10 @@ async function actualizar(req, res) {
   res.status(200).json(actualizada);
 }
 
-module.exports = { listar, obtener, crear, actualizar };
+// DELETE /historias/:id
+async function eliminar(req, res) {
+  await service.eliminar(leerId(req));
+  res.status(204).end();                      // 204 No Content: éxito, sin cuerpo
+}
+
+module.exports = { listar, obtener, crear, actualizar, eliminar };
