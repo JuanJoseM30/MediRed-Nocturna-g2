@@ -1,55 +1,67 @@
 // =====================================================================
 // CAPA DE ACCESO A DATOS (repositorio)
 // Única capa que sabe DÓNDE se guardan los datos.
-// Versión del Taller 1: datos en memoria (se pierden al reiniciar).
-// En el Taller 2 se reemplaza por MySQL SIN tocar las otras capas.
+// Versión adaptada a MySQL con mysql2/promise.
 // =====================================================================
 
-const pacientes = [
-  { id: 1, nombre: 'Carlos Bacca', documento: 1010, fecha_nacimiento: '1990-10-15', eps: 'Nueva EPS', telefono: 123456789 },
-  { id: 2, nombre: 'Miriam Lopez', documento: 2020, fecha_nacimiento: '1995-11-20', eps: 'Sura', telefono: 123456789 },
-  { id: 3, nombre: 'Jhon Aponza', documento: 3030, fecha_nacimiento: '2000-12-05', eps: 'Colsanitas', telefono: 123456789 },
-];
-let siguienteId = 4;
+const pool = require('../db');
+
+function aPaciente(fila) {
+  return {...fila, activo: Boolean(fila.activo)};
+}
 
 async function findAll(filtros = {}) {
-  return pacientes.filter((p) => {
-    const coincideEps = !filtros.eps || String(p.eps || '').toLowerCase() === String(filtros.eps).toLowerCase();
-    const coincideIds = !filtros.ids || filtros.ids.includes(Number(p.id));
+  let sql = 'SELECT * FROM pacientes';
+  const condiciones = [];
+  const valores = [];
 
-    return coincideEps && coincideIds;
-  });
+  if (filtros.eps) {
+    condiciones.push('LOWER(eps) = ?');
+    valores.push(String(filtros.eps).toLowerCase());
+  }
+
+  if (filtros.ids) {
+    condiciones.push('id IN (?)');
+    valores.push(filtros.ids);
+  }
+
+  if (condiciones.length > 0) sql += ' WHERE ' + condiciones.join(' AND ');
+
+  const [filas] = await pool.query(sql + ' ORDER BY id', valores);
+  return filas.map(aPaciente);
 }
 
 async function findById(id) {
-  // Busca estrictamente por id (clave para ms-citas y ms-historias)
-  return pacientes.find((p) => Number(p.id) === Number(id)) || null;
+  const [filas] = await pool.query('SELECT * FROM pacientes WHERE id = ?', [id]);
+  return filas.length > 0 ? aPaciente(filas[0]) : null;
 }
 
 async function findByDocumento(documento) {
-  // El repositorio solo provee la consulta; el servicio decidirá qué hacer con esto
-  return pacientes.find((p) => Number(p.documento) === Number(documento)) || null;
+  const [filas] = await pool.query('SELECT * FROM pacientes WHERE documento = ?', [documento]);
+  return filas.length > 0 ? aPaciente(filas[0]) : null;
 }
 
 async function create(paciente) {
-  // CORREGIDO: Se quitó el throw new HttpError(409). El repositorio solo guarda.
-  const nuevo = { id: siguienteId++, ...paciente };
-  pacientes.push(nuevo);
-  return nuevo;
+  const [resultado] = await pool.query(
+    'INSERT INTO pacientes (nombre, documento, fecha_nacimiento, eps, telefono) VALUES (?, ?, ?, ?, ?)',
+    [paciente.nombre, paciente.documento, paciente.fecha_nacimiento, paciente.eps, paciente.telefono]
+  );
+  if (resultado.affectedRows === 0) return null;
+  return findById(resultado.insertId);
 }
 
 async function update(id, paciente) {
-  const posicion = pacientes.findIndex((p) => Number(p.id) === Number(id));
-  if (posicion === -1) return null;
-  pacientes[posicion] = { id: Number(id), ...paciente };
-  return pacientes[posicion];
+  const [resultado] = await pool.query(
+    'UPDATE pacientes SET nombre = ?, documento = ?, fecha_nacimiento = ?, eps = ?, telefono = ? WHERE id = ?',
+    [paciente.nombre, paciente.documento, paciente.fecha_nacimiento, paciente.eps, paciente.telefono, id]
+  );
+  if (resultado.affectedRows === 0) return null;
+  return findById(id);
 }
 
 async function remove(id) {
-  const posicion = pacientes.findIndex((p) => Number(p.id) === Number(id));
-  if (posicion === -1) return false;
-  pacientes.splice(posicion, 1);
-  return true;
+  const [resultado] = await pool.query('DELETE FROM pacientes WHERE id = ?', [id]);
+  return resultado.affectedRows > 0;
 }
 
 module.exports = { findAll, findById, findByDocumento, create, update, remove };
