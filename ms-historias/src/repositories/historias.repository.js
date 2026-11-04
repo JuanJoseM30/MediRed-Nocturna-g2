@@ -27,4 +27,11 @@ async function create(historia) {
   return nueva;
 }
 
-module.exports = { findAll, findById, create };
+async function update(id, historia) {
+  const i = historias.findIndex((h) => h.id === id);
+  if (i === -1) return null;
+  historias[i] = { id, ...historia };
+  return historias[i];
+}
+
+module.exports = { findAll, findById, create, update };
