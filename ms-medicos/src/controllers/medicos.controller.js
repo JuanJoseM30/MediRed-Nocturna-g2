@@ -15,7 +15,38 @@ function leerId(req) {
 }
 
 async function listar(req, res) {
-  const medicos = await service.listar();
+  const filtros = {};
+
+  if (req.query.especialidad !== undefined) {
+    if (
+      typeof req.query.especialidad !== 'string' ||
+      !req.query.especialidad.trim()
+    ) {
+      throw new HttpError(400, 'La especialidad debe ser un texto no vacío');
+    }
+    filtros.especialidad = req.query.especialidad.trim();
+  }
+
+  if (req.query.ids !== undefined) {
+    if (typeof req.query.ids !== 'string') {
+      throw new HttpError(400, 'ids debe ser una lista de enteros positivos');
+    }
+
+    const valores = req.query.ids.split(',').map((valor) => valor.trim());
+    if (
+      valores.some(
+        (valor) =>
+          !/^[1-9]\d*$/.test(valor) ||
+          !Number.isSafeInteger(Number(valor))
+      )
+    ) {
+      throw new HttpError(400, 'ids debe contener enteros positivos separados por comas');
+    }
+
+    filtros.ids = valores.map(Number);
+  }
+
+  const medicos = await service.listar(filtros);
   res.status(200).json(medicos);
 }
 
@@ -29,4 +60,14 @@ async function crear(req, res) {
   res.status(201).location(`${req.baseUrl}/${nuevo.id}`).json(nuevo);
 }
 
-module.exports = { listar, obtener, crear };
+async function actualizar(req, res) {
+  const actualizado = await service.actualizar(leerId(req), req.body);
+  res.status(200).json(actualizado);
+}
+
+async function eliminar(req, res) {
+  await service.eliminar(leerId(req));
+  res.status(204).end();
+}
+
+module.exports = { listar, obtener, crear, actualizar, eliminar };

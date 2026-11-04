@@ -1,43 +1,59 @@
 # ms-medicos — MediRed IPS
 
 **Responsable:** Jhoan Esteban Burgos Guerrero  
-**Taller:** Módulo 3, Taller 1  
+**Módulo 3, Taller 2 — Semana 1**  
 **Puerto:** 3003
 
-Microservicio de médicos desarrollado con Node.js y Express. Está organizado en capas y, en esta etapa, guarda los datos en memoria.
+API REST para administrar médicos de MediRed IPS. Está desarrollada con Node.js y Express, organizada en capas y guarda los datos en la base `medicos_db`. Otros microservicios pueden consultar varios médicos mediante `GET /medicos?ids=1,3`.
 
-## Requisitos y ejecución
+## Requisitos y puesta en marcha
 
-Se requiere Node.js 22 o superior. Desde la carpeta `ms-medicos`, ejecutar en CMD:
+- Node.js 22 o superior.
+- MySQL o MariaDB disponible en el puerto 3306.
+- Una base `medicos_db` y un usuario `medicos_user` con permisos sobre ella.
 
-```cmd
-npm install
-copy .env.example .env
-npm run dev
+1. Crear la base y el usuario en el servidor de bases de datos.
+2. Ejecutar `db/schema.sql` para crear la tabla y cargar tres médicos iniciales.
+3. Copiar `.env.example` como `.env` y escribir allí la contraseña real en `DB_PASSWORD`. El archivo `.env` está excluido de Git.
+4. Desde la carpeta `ms-medicos`, ejecutar:
+
+```powershell
+npm.cmd install
+npm.cmd run dev
 ```
 
-El servicio queda disponible en `http://localhost:3003`. Para detenerlo, presionar **Ctrl+C**.
+El servicio queda disponible en `http://localhost:3003`. Para detenerlo, pulsar **Ctrl+C**.
 
-## Modelo de médico
+## Modelo y reglas de negocio
 
-| Atributo | Descripción |
+| Atributo | Regla |
 |---|---|
-| `id` | Identificador numérico asignado por el repositorio |
-| `nombre` | Nombre del médico; obligatorio |
-| `registro_medico` | Registro profesional; obligatorio y único |
-| `especialidad` | Especialidad médica; obligatoria |
-| `sede` | Bogotá, Cali o Medellín; obligatoria |
+| `id` | Entero positivo generado por la base de datos |
+| `nombre` | Texto obligatorio |
+| `registro_medico` | Texto obligatorio y único; se guarda en mayúsculas |
+| `especialidad` | Texto obligatorio |
+| `sede` | Obligatoria; Bogotá, Cali o Medellín |
 
-## Rutas de la API
+La base de datos también impone una restricción `UNIQUE` sobre `registro_medico`.
 
-| Método | Ruta | Respuesta |
+## Contrato de la API
+
+Las peticiones con cuerpo usan `Content-Type: application/json`. Las respuestas son JSON, excepto `204 No Content`.
+
+| Método | Ruta | Resultado |
 |---|---|---|
-| GET | `/health` | 200: estado del servicio |
-| GET | `/medicos` | 200: lista de médicos |
-| GET | `/medicos/:id` | 200: médico encontrado; 404: no existe |
-| POST | `/medicos` | 201: médico creado; 400: datos inválidos; 409: registro médico repetido |
+| GET | `/health` | `200`: estado del servicio |
+| GET | `/medicos` | `200`: lista completa |
+| GET | `/medicos?especialidad=Pediatría` | `200`: médicos de esa especialidad |
+| GET | `/medicos?ids=1,3` | `200`: médicos cuyos IDs se solicitaron; `400` si la lista de IDs es inválida |
+| GET | `/medicos/:id` | `200`: médico encontrado; `400`: ID inválido; `404`: no existe |
+| POST | `/medicos` | `201`: creado, con encabezado `Location`; `400`: datos inválidos; `409`: registro repetido |
+| PUT | `/medicos/:id` | `200`: actualizado; `400`: datos inválidos; `404`: no existe; `409`: registro repetido |
+| DELETE | `/medicos/:id` | `204`: eliminado sin cuerpo; `400`: ID inválido; `404`: no existe |
 
-Ejemplo de cuerpo JSON para `POST /medicos`:
+`PUT` recibe el médico completo: `nombre`, `registro_medico`, `especialidad` y `sede`.
+
+Ejemplo de cuerpo para POST o PUT:
 
 ```json
 {
@@ -48,19 +64,29 @@ Ejemplo de cuerpo JSON para `POST /medicos`:
 }
 ```
 
-En Postman, seleccionar **Body → raw → JSON** para enviar la petición POST.
+Los errores incluyen `error`; los errores de validación también incluyen `detalles`:
+
+```json
+{
+  "error": "Datos inválidos",
+  "detalles": ["especialidad es obligatoria"]
+}
+```
 
 ## Organización en capas
 
 | Archivo | Responsabilidad |
 |---|---|
-| `src/index.js` | Inicia el servidor en el puerto configurado |
+| `src/index.js` | Inicia el servidor |
 | `src/app.js` | Configura Express, las rutas y el manejo de errores |
-| `src/routes/medicos.routes.js` | Asocia cada método y ruta con el controlador |
-| `src/controllers/medicos.controller.js` | Lee la petición y construye la respuesta HTTP |
-| `src/services/medicos.service.js` | Aplica las validaciones y evita registros médicos repetidos |
-| `src/models/medico.js` | Define los atributos y valida los datos |
-| `src/repositories/medicos.repository.js` | Consulta y guarda los médicos en memoria |
-| `src/utils/http-error.js` | Representa errores con código de estado HTTP |
+| `src/routes/medicos.routes.js` | Asocia métodos y rutas con el controlador |
+| `src/controllers/medicos.controller.js` | Traduce peticiones y respuestas HTTP |
+| `src/services/medicos.service.js` | Aplica las reglas de negocio |
+| `src/models/medico.js` | Valida y construye los datos del médico |
+| `src/repositories/medicos.repository.js` | Ejecuta consultas SQL parametrizadas |
+| `src/db.js` | Configura el grupo de conexiones a la base |
+| `db/schema.sql` | Define la tabla y los datos iniciales |
 
-El repositorio inicia con tres médicos. Los registros creados mediante POST se pierden al reiniciar el servicio, porque todavía no se utiliza una base de datos.
+## Verificación en Postman
+
+Se comprobaron listado, filtro por especialidad, consulta por varios IDs, consulta individual, creación, actualización y eliminación. También se verificaron las respuestas `400` por datos o ID inválidos, `404` por médico inexistente y `409` por registro repetido. Un médico creado permaneció disponible después de reiniciar Node.
