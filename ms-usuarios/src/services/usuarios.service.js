@@ -32,4 +32,20 @@ async function crear(datos) {
   return repo.create(usuario);
 }
 
-module.exports = { listar, obtener, crear };
+async function actualizar(id,datos) {
+  const errores = validarUsuario(datos);
+  if (errores.length > 0) throw new HttpError(400, 'Datos invalidos', errores);
+  const usuario = construirUsuario(datos);
+
+  const actualizado = await repo.update(id,usuario);
+  if(!actualizado) throw new HttpError(404, 'No existe el usuario con id ${id}');
+  return actualizado;
+}
+
+async function eliminar(id){
+  const eliminado = await repo.remove(id);
+  if(!eliminado) throw new HttpError(404, 'No existe ese usuario con id ${id}');
+}
+
+module.exports = { listar, obtener, crear, actualizar, eliminar };
+
