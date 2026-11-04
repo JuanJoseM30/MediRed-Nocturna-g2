@@ -13,10 +13,12 @@ const pacientes = [
 let siguienteId = 4;
 
 async function findAll(filtros = {}) {
-  return pacientes.filter((p) =>
-    (!filtros.eps || p.eps.toLowerCase() === filtros.eps.toLowerCase()) &&
-    (!filtros.ids || filtros.ids.includes(Number(p.id)))
-  );
+  return pacientes.filter((p) => {
+    const coincideEps = !filtros.eps || String(p.eps || '').toLowerCase() === String(filtros.eps).toLowerCase();
+    const coincideIds = !filtros.ids || filtros.ids.includes(Number(p.id));
+
+    return coincideEps && coincideIds;
+  });
 }
 
 async function findById(id) {
@@ -48,6 +50,17 @@ async function remove(id) {
   if (posicion === -1) return false;
   pacientes.splice(posicion, 1);
   return true;
+}
+async function findAll(filtros = {}) {
+  
+  return pacientes.filter((p) => {
+    console.log(`Evaluando paciente ${p.nombre} con eps: '${p.eps}' frente al filtro: '${filtros.eps}'`);
+    
+    const coincideEps = !filtros.eps || String(p.eps || '').toLowerCase() === String(filtros.eps).toLowerCase();
+    const coincideIds = !filtros.ids || filtros.ids.includes(Number(p.id));
+
+    return coincideEps && coincideIds;
+  });
 }
 
 module.exports = { findAll, findById, findByDocumento, create, update, remove };
