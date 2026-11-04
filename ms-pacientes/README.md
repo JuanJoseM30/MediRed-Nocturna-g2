@@ -1,5 +1,10 @@
 # ms-pacientes · Contrato de la API
 
+## Descripción
+* **Entidad que gestiona:** Pacientes del sistema MediRed.
+* **Responsable:** Juan José Marín Orejuela (Código: 2235452).
+* **Puerto en el que escucha:** 3002.
+
 ## Cómo ejecutarlo
 
 1. Crear la base de datos y su usuario (como root):
@@ -51,7 +56,9 @@ npm run dev
 ## Relaciones
 Consulto a: ninguno.
 
-Me consultan: ms-citas (para validar la existencia y datos del paciente al agendar).
+| Me consulta | Peticiones que me hace | Campos que no puedo cambiar sin avisar |
+|---|---|---|
+| `ms-citas` | `GET /pacientes/:id` · `GET /pacientes?ids=…` | id, nombre, documento, EPS |
 
 ## Pruebas
 Colección de Postman en [`docs/ms-pacientes.postman_collection.json`](./docs/ms-pacientes.postman_collection.json) (13 casos).
