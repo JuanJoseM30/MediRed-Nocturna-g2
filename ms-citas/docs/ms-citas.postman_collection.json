@@ -1,0 +1,335 @@
+{
+  "info": {
+    "_postman_id": "b30a2777-7341-49b6-a232-e4452d64bcfe",
+    "name": "ms-citas",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "59276396",
+    "_collection_link": "https://go.postman.co/collection/59276396-b30a2777-7341-49b6-a232-e4452d64bcfe?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "01 Listar todos -> 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3004/citas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "02 Filtrar por estado o sede -> 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3004/citas?estado=programada",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ],
+          "query": [
+            {
+              "key": "estado",
+              "value": "programada"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03 Consultar por lotes -> 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3004/citas?ids=1,2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ],
+          "query": [
+            {
+              "key": "ids",
+              "value": "1,2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 Obtener existente -> 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3004/citas/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05 Obtener inexistente -> 404",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3004/citas/99",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas",
+            "99"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06 Obtener con id no numerico -> 400",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3004/citas/abc",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas",
+            "abc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "07 Crear Válido -> 201",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"paciente_id\": 1, \"medico_id\": 3, \"fecha_hora\": \"2026-11-20T11:00:00\", \"sede\": \"Cali\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3004/citas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08 Crear sin datos obligatorios -> 400",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"paciente_id\": 1 }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3004/citas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "09 Crear cita repetida -> 409",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"paciente_id\": 2, \"medico_id\": 1, \"fecha_hora\": \"2026-11-03T08:00\", \"sede\": \"Cali\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3004/citas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "10 Actualizar existente -> 200",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"paciente_id\": 2, \"medico_id\": 2, \"fecha_hora\": \"2026-11-03T09:30\", \"sede\": \"Bogotá\", \"estado\": \"atendida\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3004/citas/2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "11 Actualizar inexistente -> 404",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"paciente_id\": 3, \"medico_id\": 2, \"fecha_hora\": \"2026-11-03T08:00\", \"sede\": \"Cali\", \"estado\": \"programada\" }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3004/citas/99",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas",
+            "99"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "12 Eliminar existente -> 204",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3004/citas/4",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas",
+            "4"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "13 Eliminar inexistente -> 404",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3004/citas/10",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas",
+            "10"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

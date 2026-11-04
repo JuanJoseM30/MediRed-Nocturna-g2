@@ -43,9 +43,7 @@ async function actualizar(id, datos) {
   // Regla de negocio: verificar si la nueva fecha/hora choca con otra cita del mismo médico
   const otraCita = await repo.findByMedicoYFechaHora(cita.medico_id, cita.fecha_hora);
   if (otraCita && otraCita.id !== id) {
-    throw new HttpError(
-      409,
-      `El médico con id ${cita.medico_id} ya tiene una cita asignada para la fecha y hora ${cita.fecha_hora}`
+    throw new HttpError( 409, `El médico con id ${cita.medico_id} ya tiene una cita asignada para la fecha y hora ${cita.fecha_hora}`
     );
   }
 
