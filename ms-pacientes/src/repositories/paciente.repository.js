@@ -51,16 +51,5 @@ async function remove(id) {
   pacientes.splice(posicion, 1);
   return true;
 }
-async function findAll(filtros = {}) {
-  
-  return pacientes.filter((p) => {
-    console.log(`Evaluando paciente ${p.nombre} con eps: '${p.eps}' frente al filtro: '${filtros.eps}'`);
-    
-    const coincideEps = !filtros.eps || String(p.eps || '').toLowerCase() === String(filtros.eps).toLowerCase();
-    const coincideIds = !filtros.ids || filtros.ids.includes(Number(p.id));
-
-    return coincideEps && coincideIds;
-  });
-}
 
 module.exports = { findAll, findById, findByDocumento, create, update, remove };
