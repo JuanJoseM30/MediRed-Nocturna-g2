@@ -1,54 +1,67 @@
-// =====================================================================
-// CAPA DE ACCESO A DATOS (repositorio en memoria)
-// =====================================================================
-let citas = [
-  { id: 1, paciente_id: 1, medico_id: 1, fecha_hora: '2026-11-03T08:00', sede: 'Cali', estado: 'programada' },
-  { id: 2, paciente_id: 2, medico_id: 2, fecha_hora: '2026-11-03T09:30', sede: 'Bogotá', estado: 'atendida' },
-  { id: 3, paciente_id: 3, medico_id: 1, fecha_hora: '2026-11-04T10:00', sede: 'Cali', estado: 'cancelada' },
-];
-let siguienteId = 4;
+// src/repositories/citas.repository.js — versión MySQL
+const pool = require('../db');
 
 async function findAll(filtros = {}) {
-  let resultado = [...citas];
+  let sql = 'SELECT * FROM citas';
+  const condiciones = [];
+  const valores = [];
+
   if (filtros.estado) {
-    resultado = resultado.filter((c) => c.estado === filtros.estado);
+    condiciones.push('estado = ?');
+    valores.push(filtros.estado);
   }
+
   if (filtros.sede) {
-    resultado = resultado.filter((c) => c.sede.toLowerCase() === filtros.sede.toLowerCase());
+    condiciones.push('LOWER(sede) = LOWER(?)');
+    valores.push(filtros.sede);
   }
-  return resultado;
+
+  if (filtros.ids && filtros.ids.length > 0) {
+    condiciones.push('id IN (?)');
+    valores.push(filtros.ids); // mysql2 maneja el arreglo [1, 2] directamente para IN (?)
+  }
+
+  if (condiciones.length > 0) {
+    sql += ' WHERE ' + condiciones.join(' AND ');
+  }
+
+  const [filas] = await pool.query(sql + ' ORDER BY id', valores);
+  return filas;
 }
 
 async function findById(id) {
-  return citas.find((c) => c.id === id) || null;
+  const [filas] = await pool.query('SELECT * FROM citas WHERE id = ?', [id]);
+  return filas.length > 0 ? filas[0] : null;
 }
 
 async function findByMedicoYFechaHora(medico_id, fecha_hora) {
-  return citas.find(
-    (c) => c.medico_id === medico_id && 
-           c.fecha_hora === fecha_hora && 
-           c.estado !== 'cancelada'
-  ) || null;
+  const [filas] = await pool.query(
+    'SELECT * FROM citas WHERE medico_id = ? AND fecha_hora = ? AND estado != ?',
+    [medico_id, fecha_hora, 'cancelada']
+  );
+  return filas.length > 0 ? filas[0] : null;
 }
 
 async function create(cita) {
-  const nueva = { id: siguienteId++, ...cita };
-  citas.push(nueva);
-  return nueva;
+  const [resultado] = await pool.query(
+    'INSERT INTO citas (paciente_id, medico_id, fecha_hora, sede, estado) VALUES (?, ?, ?, ?, ?)',
+    [cita.paciente_id, cita.medico_id, cita.fecha_hora, cita.sede, cita.estado]
+  );
+  return findById(resultado.insertId);
 }
 
-async function update(id, datosCita) {
-  const indice = citas.findIndex((c) => c.id === id);
-  if (indice === -1) return null;
-  citas[indice] = { id, ...datosCita };
-  return citas[indice];
+async function update(id, cita) {
+  const [resultado] = await pool.query(
+    'UPDATE citas SET paciente_id = ?, medico_id = ?, fecha_hora = ?, sede = ?, estado = ? WHERE id = ?',
+    [cita.paciente_id, cita.medico_id, cita.fecha_hora, cita.sede, cita.estado, id]
+  );
+  if (resultado.affectedRows === 0) return null;
+  return findById(id);
 }
 
 async function remove(id) {
-  const indice = citas.findIndex((c) => c.id === id);
-  if (indice === -1) return false;
-  citas.splice(indice, 1);
-  return true;
+  const [resultado] = await pool.query('DELETE FROM citas WHERE id = ?', [id]);
+  return resultado.affectedRows > 0;
 }
 
-module.exports = { findAll, findById, findByMedicoYFechaHora, create, update, remove };
+module.exports = { findAll, findById, findByMedicoYFechaHora, create, update, remove};

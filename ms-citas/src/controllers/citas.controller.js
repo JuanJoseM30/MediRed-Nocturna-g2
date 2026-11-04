@@ -12,12 +12,20 @@ function leerId(req) {
   return id;
 }
 
-// GET /citas, GET /citas?estado=programada, GET /citas?sede=Cali
+// GET /citas, GET /citas?estado=programada, GET /citas?ids=1,3
 async function listar(req, res) {
   const filtros = {
     estado: req.query.estado,
     sede: req.query.sede,
   };
+
+  if (req.query.ids) {
+    filtros.ids = String(req.query.ids).split(',').map(Number);
+    if (filtros.ids.some((id) => !Number.isInteger(id) || id <= 0)) {
+      throw new HttpError(400, 'ids debe ser una lista de enteros separados por comas');
+    }
+  }
+
   const citas = await service.listar(filtros);
   res.status(200).json(citas);
 }
