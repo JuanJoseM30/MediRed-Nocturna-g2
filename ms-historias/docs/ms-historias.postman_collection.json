@@ -1,0 +1,424 @@
+{
+  "info": {
+    "_postman_id": "b1642b3b-cff3-4f47-af6b-e4d84bb3a359",
+    "name": "ms-historias",
+    "description": "Casos de prueba del Taller 2 (semana 1) de ms-historias · MediRed IPS. El caso 03 (consulta por lotes) no aplica: ningún microservicio consulta a ms-historias.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Listar todos → 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
+        }
+      }
+    },
+    {
+      "name": "02 - Filtrar por paciente → 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base}}/historias?paciente_id=1",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ],
+          "query": [
+            {
+              "key": "paciente_id",
+              "value": "1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "04 - Obtener existente → 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base}}/historias/2",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias",
+            "2"
+          ]
+        }
+      }
+    },
+    {
+      "name": "05 - Obtener inexistente → 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 404\", () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base}}/historias/99",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias",
+            "99"
+          ]
+        }
+      }
+    },
+    {
+      "name": "06 - Obtener con id no numérico → 400",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 400\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base}}/historias/abc",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias",
+            "abc"
+          ]
+        }
+      }
+    },
+    {
+      "name": "07 - Crear válido → 201",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 201\", () => pm.response.to.have.status(201));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"paciente_id\": 3,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-27\",\n  \"motivo_consulta\": \"Dolor abdominal\",\n  \"diagnostico\": \"Gastritis\",\n  \"tratamiento\": \"Omeprazol 20 mg en ayunas\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "08 - Crear sin datos obligatorios → 400",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 400\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"paciente_id\": 3\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "09 - Crear con fecha futura → 400",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 400\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"paciente_id\": 3,\n  \"medico_id\": 2,\n  \"fecha\": \"2030-01-01\",\n  \"motivo_consulta\": \"Dolor abdominal\",\n  \"diagnostico\": \"Gastritis\",\n  \"tratamiento\": \"Omeprazol 20 mg en ayunas\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "10 - Actualizar existente → 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base}}/historias/2",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias",
+            "2"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"paciente_id\": 2,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-12\",\n  \"motivo_consulta\": \"Tos y fiebre\",\n  \"diagnostico\": \"Bronquitis aguda\",\n  \"tratamiento\": \"Jarabe y reposo por 5 días\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "11 - Actualizar inexistente → 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 404\", () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base}}/historias/99",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias",
+            "99"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"paciente_id\": 2,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-12\",\n  \"motivo_consulta\": \"Tos y fiebre\",\n  \"diagnostico\": \"Bronquitis aguda\",\n  \"tratamiento\": \"Jarabe y reposo por 5 días\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "12 - Eliminar existente → 204",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 204\", () => pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base}}/historias/3",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias",
+            "3"
+          ]
+        }
+      }
+    },
+    {
+      "name": "13 - Eliminar otra vez → 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 404\", () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base}}/historias/3",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias",
+            "3"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base",
+      "value": "http://localhost:3005",
+      "type": "string"
+    }
+  ]
+}
