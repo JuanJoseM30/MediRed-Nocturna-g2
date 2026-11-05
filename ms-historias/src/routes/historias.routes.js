@@ -10,7 +10,7 @@ const router = Router();
 router.get('/', controller.listar);      // listar todas las historias
 router.get('/:id', controller.obtener);  // obtener una historia por id
 router.post('/', controller.crear);      // crear una historia
-
-// Taller 2: agregar PUT /:id (actualizar) y DELETE /:id (eliminar)
+router.put('/:id', controller.actualizar);    // actualizar una historia
+router.delete('/:id', controller.eliminar);   // eliminar una historia
 
 module.exports = router;

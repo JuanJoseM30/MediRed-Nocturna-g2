@@ -6,30 +6,86 @@
 // Todas las funciones son async (devuelven promesas) para que el cambio
 // a una base de datos real no obligue a modificar la capa de servicio.
 // =====================================================================
-const medicos = [
-  { id: 1, nombre: 'Ana María Torres', registro_medico: 'RM-1001', especialidad: 'Pediatría', sede: 'Bogotá' },
-  { id: 2, nombre: 'Carlos Rojas', registro_medico: 'RM-1002', especialidad: 'Cardiología', sede: 'Cali' },
-  { id: 3, nombre: 'Lucía Gómez', registro_medico: 'RM-1003', especialidad: 'Medicina interna', sede: 'Medellín' },
-];
+// Capa de acceso a datos: todas las consultas usan MariaDB.
+const pool = require('../db');
 
-let siguienteId = 4;
+const COLUMNAS = 'id, nombre, registro_medico, especialidad, sede';
 
-async function findAll() {
-  return medicos;
+async function findAll({ especialidad, ids } = {}) {
+  let sql = `SELECT ${COLUMNAS} FROM medicos`;
+  const condiciones = [];
+  const parametros = [];
+
+  if (especialidad) {
+    condiciones.push('especialidad = ?');
+    parametros.push(especialidad);
+  }
+
+  if (ids) {
+    if (ids.length === 0) return [];
+    condiciones.push(`id IN (${ids.map(() => '?').join(', ')})`);
+    parametros.push(...ids);
+  }
+
+  if (condiciones.length > 0) {
+    sql += ` WHERE ${condiciones.join(' AND ')}`;
+  }
+  sql += ' ORDER BY id';
+
+  const [filas] = await pool.execute(sql, parametros);
+  return filas;
 }
 
 async function findById(id) {
-  return medicos.find((medico) => medico.id === id) || null;
+  const [filas] = await pool.execute(
+    `SELECT ${COLUMNAS} FROM medicos WHERE id = ? LIMIT 1`,
+    [id]
+  );
+  return filas[0] || null;
 }
 
 async function findByRegistroMedico(registro_medico) {
-  return medicos.find((medico) => medico.registro_medico === registro_medico) || null;
+  const [filas] = await pool.execute(
+    `SELECT ${COLUMNAS} FROM medicos WHERE registro_medico = ? LIMIT 1`,
+    [registro_medico]
+  );
+  return filas[0] || null;
 }
 
 async function create(medico) {
-  const nuevo = { id: siguienteId++, ...medico };
-  medicos.push(nuevo);
-  return nuevo;
+  const [resultado] = await pool.execute(
+    `INSERT INTO medicos (nombre, registro_medico, especialidad, sede)
+     VALUES (?, ?, ?, ?)`,
+    [medico.nombre, medico.registro_medico, medico.especialidad, medico.sede]
+  );
+  return findById(resultado.insertId);
 }
 
-module.exports = { findAll, findById, findByRegistroMedico, create };
+async function update(id, medico) {
+  if (!(await findById(id))) return null;
+
+  await pool.execute(
+    `UPDATE medicos
+     SET nombre = ?, registro_medico = ?, especialidad = ?, sede = ?
+     WHERE id = ?`,
+    [medico.nombre, medico.registro_medico, medico.especialidad, medico.sede, id]
+  );
+  return findById(id);
+}
+
+async function remove(id) {
+  const [resultado] = await pool.execute(
+    'DELETE FROM medicos WHERE id = ?',
+    [id]
+  );
+  return resultado.affectedRows > 0;
+}
+
+module.exports = {
+  findAll,
+  findById,
+  findByRegistroMedico,
+  create,
+  update,
+  remove,
+};
