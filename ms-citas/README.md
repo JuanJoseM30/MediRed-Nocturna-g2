@@ -72,7 +72,7 @@ Prueben en el navegador: http://localhost:3004/health y http://localhost:3004/ci
 | Filtrar | GET | /citas?estado=programada | 200 arreglo | — |
 | Consultar por lotes | GET | /citas?ids=1,2 | 200 arreglo | 400 |
 | Obtener | GET | /citas/:id | 200 objeto | 400 · 404 |
-| Crear | GET/POST | /citas | 201 objeto + Location | 400 · 409 |
+| Crear | POST | /citas | 201 objeto + Location | 400 · 409 |
 | Actualizar | PUT | /citas/:id | 200 objeto | 400 · 404 · 409 |
 | Eliminar | DELETE | /citas/:id | 204 | 400 · 404 |
 
