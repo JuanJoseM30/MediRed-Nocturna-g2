@@ -64,15 +64,17 @@ Prueben en el navegador: http://localhost:3004/health y http://localhost:3004/ci
 
 ## Endpoints (Taller 2)
 
-| Método | URI | Estado HTTP | Descripción / Parámetros |
-|---|---|---|---|
-| GET | /health | 200 OK | Endpoint de salud para verificación del microservicio |
-| GET | /citas | 200 OK | Lista todas las citas. Soporta filtros opcionales (?estado=programada, ?sede=Cali) |
-| GET | /citas?ids=1,2 | 200 OK | Consulta por lotes recuperando las citas cuyos IDs coincidan con la lista expuesta |
-| GET | /citas/:id | 200 OK / 400 / 404 | Consulta una cita por ID |
-| POST | /citas | 201 Created / 400 / 409 | Crea una nueva cita. Valida requeridos y evita cruce de horario por médico (409 Conflict) |
-| PUT | /citas/:id | 200 OK / 400 / 404 / 409 | Actualización completa de una cita existente |
-| DELETE | /citas/:id | 204 No Content / 400 / 404 | Elimina una cita de la base de datos por su ID |
+## Endpoints
+
+| Operación | Método | URI | Respuesta exitosa | Errores |
+|---|---|---|---|---|
+| Listar | GET | /citas | 200 arreglo | — |
+| Filtrar | GET | /citas?estado=programada | 200 arreglo | — |
+| Consultar por lotes | GET | /citas?ids=1,2 | 200 arreglo | 400 |
+| Obtener | GET | /citas/:id | 200 objeto | 400 · 404 |
+| Crear | GET/POST | /citas | 201 objeto + Location | 400 · 409 |
+| Actualizar | PUT | /citas/:id | 200 objeto | 400 · 404 · 409 |
+| Eliminar | DELETE | /citas/:id | 204 | 400 · 404 |
 
 ## Subsección de Relaciones Inter-Microservicios
 
