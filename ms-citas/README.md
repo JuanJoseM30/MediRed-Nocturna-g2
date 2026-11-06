@@ -28,7 +28,7 @@ mysql -u citas_user -pcitas123 citas_db < db/schema.sql
 ### 2. Configuración e Instalación del Microservicio
 
 ```
-npm install                 # descarga Express en node_modules
+npm install                 # descarga Express y mysql2 en node_modules
 copy .env.example .env      # en Windows (en Linux/Mac: cp .env.example .env)
 npm run dev                 # inicia y se reinicia solo al guardar cambios
 ```
