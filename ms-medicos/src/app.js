@@ -10,6 +10,10 @@ const app = express();
 // Middleware: convierte el cuerpo JSON de la petición en un objeto (req.body)
 app.use(express.json());
 
+app.use((req, res, next) => {
+  console.log(`${new Date().toLocaleTimeString()} ${req.method} ${req.originalUrl}`);
+  next();
+});
 // Endpoint de salud: permite verificar que el microservicio está vivo
 app.get('/health', (req, res) => {
   res.json({ servicio: 'ms-medicos', estado: 'ok' });
