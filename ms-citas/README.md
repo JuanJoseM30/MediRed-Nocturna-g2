@@ -1,16 +1,34 @@
-# ms-citas · Taller 1 (Módulo 3)
+# ms-citas · Taller 2 (Semana 1)
 
-Redes y Servicios Multimedia · UAO · Microservicio de **citas médicas** de la aplicación **MediRed IPS**,
-con **Node.js + Express** organizado en capas.
+Redes y Servicios Multimedia · UAO · Microservicio de **citas médicas** de la aplicación **MediRed IPS**, organizado bajo **Clean Architecture** (Arquitectura Limpia).
 
-Esta es la versión del Taller 1: datos en memoria y tres operaciones básicas (listar, obtener por id y crear). La versión completa (MySQL, integración con Apache API Gateway, autenticación JWT y validación REST de `paciente_id` y `medico_id`) se despliega en el Taller 3.
+**Responsable:** Santiago Garzón  
+**Puerto predeterminado:** 3004  
+**Entidad gestionada:** Citas Médicas  
+
+Esta versión incluye la implementación de la capa de persistencia mediante **MySQL (XAMPP)** con el conector `mysql2`, el CRUD completo en base de datos con consultas parametrizadas, filtrado avanzado, soporte de consulta por lotes (`?ids=`), y la suite de pruebas automatizadas exportada para Postman.
+
+---
 
 ## Cómo ejecutarlo
 
-Requisitos: Node.js LTS 22 o superior (`node -v`).
+### Requisitos previos
+1. Node.js LTS 22 o superior (`node -v`).
+2. XAMPP Control Panel con el servicio de **MySQL** iniciado.
+
+### 1. Preparar la Base de Datos en MySQL (XAMPP)
+
+Ejecuta las siguientes instrucciones en la consola (Shell de XAMPP o CMD) para crear la base de datos, el usuario y poblar la tabla inicial:
+
+```bash
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS citas_db; CREATE USER IF NOT EXISTS 'citas_user'@'localhost' IDENTIFIED BY 'citas123'; GRANT ALL PRIVILEGES ON citas_db.* TO 'citas_user'@'localhost'; FLUSH PRIVILEGES;"
+mysql -u citas_user -pcitas123 citas_db < db/schema.sql
+```
+
+### 2. Configuración e Instalación del Microservicio
 
 ```
-npm install                 # descarga Express en node_modules
+npm install                 # descarga Express y mysql2 en node_modules
 copy .env.example .env      # en Windows (en Linux/Mac: cp .env.example .env)
 npm run dev                 # inicia y se reinicia solo al guardar cambios
 ```
@@ -19,27 +37,54 @@ Prueben en el navegador: http://localhost:3004/health y http://localhost:3004/ci
 
 ## Capas
 
-| Archivo | Capa | Responsabilidad |
+| Archivo / Carpeta | Capa | Responsabilidad |
 |---|---|---|
-| src/index.js | Arranque | Lee PORT y HOST y pone el servidor a escuchar |
-| src/app.js | Configuración | Middlewares, /health, montaje de rutas, manejo de errores |
-| src/routes/citas.routes.js | Presentación | Método HTTP + URI → función del controlador |
-| src/controllers/citas.controller.js | Presentación | Lee la petición, llama al servicio, arma la respuesta |
-| src/services/citas.service.js | Lógica de negocio | Validaciones y reglas (médico sin citas solapadas); no conoce HTTP ni la base de datos |
-| src/repositories/citas.repository.js | Acceso a datos | Guarda y consulta (en memoria en el Taller 1) |
-| src/models/cita.js | Modelo | Atributos de la entidad y su validación |
-| src/utils/http-error.js | Utilidad | Error con código de estado HTTP |
+| `src/index.js` | Arranque | Lee PORT y HOST desde .env y levanta el servidor Express |
+| `src/app.js` | Configuración | Middlewares (JSON parser), /health, montaje de rutas y manejo de errores |
+| `src/db.js` | Conexión DB | Crea y exporta el pool de conexiones asíncronas con mysql2/promise |
+| `src/routes/citas.routes.js` | Presentación | Método HTTP + URI → función del controlador |
+| `src/controllers/citas.controller.js` | Presentación | Lee la petición (params, body, query), llama al servicio y arma la respuesta |
+| `src/services/citas.service.js` | Lógica de negocio | Validaciones y reglas (médico sin citas solapadas); lanza HttpError |
+| `src/repositories/citas.repository.js` | Acceso a datos | Consulta y persiste mediante sentencias SQL parametrizadas en MySQL |
+| `src/models/cita.js` | Modelo | Atributos de la entidad cita y su función de validación |
+| `src/utils/http-error.js` | Utilidad | Error personalizado con código de estado HTTP |
+| `db/schema.sql` | Persistencia | DDL de creación de la tabla citas e inserciones iniciales |
+| `docs/ms-citas.postman_collection.json` | Pruebas | Colección de 13 casos de prueba exportados desde Postman |
 
-## Endpoints (Taller 1)
+## Atributos del Recurso (Cita)
 
-| Método | URI | Respuesta |
-|---|---|---|
-| GET | /health | 200 `{"servicio":"ms-citas","estado":"ok"}` |
-| GET | /citas | 200 arreglo de citas |
-| GET | /citas/:id | 200 cita · 400 id inválido · 404 no existe |
-| POST | /citas | 201 cita creada · 400 datos inválidos · 409 médico ocupado a esa hora |
+| Atributo | Tipo | Obligatorio | Reglas / Descripción |
+|---|---|---|---|
+| `id` | Entero | No | Autogenerado por MySQL (Auto Increment) |
+| `paciente_id` | Entero | Sí | Entero positivo. Referencia lógica a ms-pacientes |
+| `medico_id` | Entero | Sí | Entero positivo. Referencia lógica a ms-medicos |
+| `fecha_hora` | Texto | Sí | Cadena de texto en formato ISO (ej. 2026-11-03T08:00) |
+| `sede` | Texto | Sí | Sede de la atención (ej. Cali, Bogotá, Medellín) |
+| `estado` | Texto | No | Estado de la cita: programada (por defecto), atendida, cancelada |
 
-Ejemplo de cuerpo para POST:
+## Endpoints (Taller 2)
+
+## Endpoints
+
+| Operación | Método | URI | Respuesta exitosa | Errores |
+|---|---|---|---|---|
+| Listar | GET | /citas | 200 arreglo | — |
+| Filtrar | GET | /citas?estado=programada | 200 arreglo | — |
+| Consultar por lotes | GET | /citas?ids=1,2 | 200 arreglo | 400 |
+| Obtener | GET | /citas/:id | 200 objeto | 400 · 404 |
+| Crear | POST | /citas | 201 objeto + Location | 400 · 409 |
+| Actualizar | PUT | /citas/:id | 200 objeto | 400 · 404 · 409 |
+| Eliminar | DELETE | /citas/:id | 204 | 400 · 404 |
+
+## Subsección de Relaciones Inter-Microservicios
+
+### Como microservicio que consulta:
+
+| Atributo | Microservicio consultado | Para validar (POST/PUT) | Para componer (GET) | Datos consumidos |
+|---|---|---|---|---|
+| `paciente_id` | ms-pacientes (Puerto 3002) | GET /pacientes/:id | GET /pacientes?ids=... | id, nombre, documento |
+| `medico_id` | ms-medicos (Puerto 3003) | GET /medicos/:id | GET /medicos?ids=... | id, nombre, especialidad |
+
+### Ejemplo de cuerpo para postman
 `{"paciente_id": 1, "medico_id": 2, "fecha_hora": "2026-11-10T10:30:00", "sede": "Cali"}`
 
-Los roles válidos se configuran en el archivo .env (`ROLES=administrador,admisiones,medico`).
