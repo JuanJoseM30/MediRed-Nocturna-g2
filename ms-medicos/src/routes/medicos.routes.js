@@ -4,8 +4,9 @@
 // =====================================================================
 const { Router } = require('express');
 const controller = require('../controllers/medicos.controller');
-
+const { verificarToken } = require('../middlewares/auth');
 const router = Router();
+router.use(verificarToken);
 
 router.get('/', controller.listar);
 router.get('/:id', controller.obtener);
