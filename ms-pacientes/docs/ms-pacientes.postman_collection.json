@@ -10,17 +10,27 @@
     {
       "name": "1. Listar todos",
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_admin}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3002/health",
+          "raw": "http://localhost:3002/pacientes",
           "protocol": "http",
           "host": [
             "localhost"
           ],
           "port": "3002",
           "path": [
-            "health"
+            "pacientes"
           ]
         }
       },
@@ -192,6 +202,165 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "14. Get/pacientes sin token",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "15. Get/pacientes token de medico letra cambiada",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_1cjr}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:3002/pacientes",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3002",
+          "path": [
+            "pacientes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "16. Get/pacientes token de medico",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_05w4}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:3002/pacientes",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3002",
+          "path": [
+            "pacientes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "17. post/pacientes token de medico o admisiones",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_05w4}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:3002/pacientes",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3002",
+          "path": [
+            "pacientes"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "18. post/pacientes token de administrador",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_178t}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:3002/pacientes",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3002",
+          "path": [
+            "pacientes"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token_admin}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "token_admin",
+      "secret": true
+    },
+    {
+      "key": "token_medico",
+      "secret": true
     }
   ]
 }

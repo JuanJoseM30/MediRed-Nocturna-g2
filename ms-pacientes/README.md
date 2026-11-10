@@ -54,11 +54,17 @@ npm run dev
 { "nombre": "Laura Tula", "documento": 7070, "fecha_nacimiento": "2006-10-30", "EPS": "Colsanitas", "telefono": 123456789 }
 
 ## Relaciones
-Consulto a: ninguno.
+
+ms-pacientes es un microservicio **consultado**: no guarda referencias a otros
+microservicios, pero otros guardan `paciente_id` y le preguntan por REST.
 
 | Me consulta | Peticiones que me hace | Campos que no puedo cambiar sin avisar |
 |---|---|---|
-| `ms-citas` | `GET /pacientes/:id` · `GET /pacientes?ids=…` | id, nombre, documento, EPS |
+| ms-citas | `GET /pacientes/:id` · `GET /pacientes?ids=…` | id, nombre, documento |
+| ms-historias | `GET /pacientes/:id` · `GET /pacientes?ids=…` | id, nombre, documento |
+
+Todas las peticiones exigen la cabecera `Authorization: Bearer <token>`
+(el microservicio que consulta reenvía el token del usuario).
 
 ## Pruebas
 Colección de Postman en [`docs/ms-pacientes.postman_collection.json`](./docs/ms-pacientes.postman_collection.json) (13 casos).
