@@ -15,3 +15,7 @@ router.put('/:id', controller.actualizar);
 router.delete('/:id', controller.eliminar);
 
 module.exports = router;
+
+// Ahora se necesita un Token que genera Usuarios para consultar medicos, es decir se deben mantener las 2 terminales encendidas
+// El token se genera cambia cada vez que se le da en Send 
+// en http://localhost:3001/usuarios/login
