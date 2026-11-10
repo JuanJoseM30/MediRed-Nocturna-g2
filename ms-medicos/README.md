@@ -1,7 +1,7 @@
 # ms-medicos — MediRed IPS
 
 **Responsable:** Jhoan Esteban Burgos Guerrero  
-**Módulo 3, Taller 2 — Semana 1**  
+**Módulo 3, Taller 2 — Semana 2**  
 **Puerto:** 3003
 
 API REST para administrar médicos de MediRed IPS. Está desarrollada con Node.js y Express, organizada en capas y guarda los datos en la base `medicos_db`. Otros microservicios pueden consultar varios médicos mediante `GET /medicos?ids=1,3`.
@@ -14,7 +14,9 @@ API REST para administrar médicos de MediRed IPS. Está desarrollada con Node.j
 
 1. Crear la base y el usuario en el servidor de bases de datos.
 2. Ejecutar `db/schema.sql` para crear la tabla y cargar tres médicos iniciales.
-3. Copiar `.env.example` como `.env` y escribir allí la contraseña real en `DB_PASSWORD`. El archivo `.env` está excluido de Git.
+3. Copiar `.env.example` como `.env`. Escribir la contraseña real en
+   `DB_PASSWORD` y poner en `JWT_SECRET` la misma clave privada configurada
+   en `ms-usuarios`. El archivo `.env` está excluido de Git.
 4. Desde la carpeta `ms-medicos`, ejecutar:
 
 ```powershell
@@ -90,3 +92,26 @@ Los errores incluyen `error`; los errores de validación también incluyen `deta
 ## Verificación en Postman
 
 Se comprobaron listado, filtro por especialidad, consulta por varios IDs, consulta individual, creación, actualización y eliminación. También se verificaron las respuestas `400` por datos o ID inválidos, `404` por médico inexistente y `409` por registro repetido. Un médico creado permaneció disponible después de reiniciar Node.
+
+## Seguridad y permisos
+
+Las rutas `/medicos` requieren un token de `ms-usuarios` en la cabecera
+`Authorization: Bearer <token>`. La variable `JWT_SECRET` del archivo
+`.env` debe ser igual en ambos microservicios.
+
+Cualquier usuario autenticado puede consultar médicos. Solo el rol
+`administrador` puede crear, actualizar y eliminar. Un token ausente,
+inválido o vencido recibe `401`; un rol sin permiso recibe `403`.
+
+## Relaciones con otros microservicios
+
+`ms-citas` y `ms-historias` guardan `medico_id` y consultan este servicio:
+
+| Consulta | Uso |
+|---|---|
+| `GET /medicos/:id` | Verificar que un médico exista |
+| `GET /medicos?ids=1,3` | Obtener varios médicos en una sola petición |
+
+Ambas consultas requieren que esos microservicios reenvíen el token del
+usuario. En las respuestas pueden usar `id`, `nombre` y `especialidad`
+para mostrar los datos del médico.
