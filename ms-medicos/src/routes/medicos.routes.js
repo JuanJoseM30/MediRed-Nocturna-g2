@@ -4,15 +4,15 @@
 // =====================================================================
 const { Router } = require('express');
 const controller = require('../controllers/medicos.controller');
-const { verificarToken } = require('../middlewares/auth');
+const { verificarToken, requiereRol } = require('../middlewares/auth');
 const router = Router();
 router.use(verificarToken);
 
 router.get('/', controller.listar);
 router.get('/:id', controller.obtener);
-router.post('/', controller.crear);
-router.put('/:id', controller.actualizar);
-router.delete('/:id', controller.eliminar);
+router.post('/', requiereRol('administrador'), controller.crear);
+router.put('/:id', requiereRol('administrador'), controller.actualizar);
+router.delete('/:id', requiereRol('administrador'), controller.eliminar);
 
 module.exports = router;
 
