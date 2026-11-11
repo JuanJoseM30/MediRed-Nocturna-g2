@@ -1,0 +1,377 @@
+{
+  "info": {
+    "_postman_id": "a87cd85b-42a3-4422-983e-463086673916",
+    "name": "Taller1M3",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "43476995"
+  },
+  "item": [
+    {
+      "name": "Microservicio",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:3003/health",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "3003",
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ver medicos",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_09ht}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3003/medicos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3003",
+          "path": [
+            "medicos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Buscar medico",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3003/medicos/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3003",
+          "path": [
+            "medicos",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Medico no encontrado",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3003/medicos/999",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3003",
+          "path": [
+            "medicos",
+            "999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Crear medico",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"nombre\": \"Andres Perez\",\r\n  \"registro_medico\": \"RM-1005\",\r\n  \"especialidad\": \"Neurología\",\r\n  \"sede\": \"Bogotá\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3003/medicos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3003",
+          "path": [
+            "medicos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "MedicoIncompleto",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"nombre\": \"Diego Pérez\",\r\n  \"registro_medico\": \"RM-1005\",\r\n  \"sede\": \"Cali\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3003/medicos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3003",
+          "path": [
+            "medicos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "RegistroRepetido",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"nombre\": \"Otro Médico\",\r\n  \"registro_medico\": \"RM-1001\",\r\n  \"especialidad\": \"Pediatría\",\r\n  \"sede\": \"tulua\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3003/medicos",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3003",
+          "path": [
+            "medicos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "FiltroPorEspecialidad",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3003/medicos?especialidad=Pediatría",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3003",
+          "path": [
+            "medicos"
+          ],
+          "query": [
+            {
+              "key": "especialidad",
+              "value": "Pediatría"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "FiltroPorId",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3003/medicos?ids=1,3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3003",
+          "path": [
+            "medicos"
+          ],
+          "query": [
+            {
+              "key": "ids",
+              "value": "1,3"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ActualizarMedico",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"nombre\": \"Lucía Gómez\",\r\n  \"registro_medico\": \"RM-1003\",\r\n  \"especialidad\": \"Medicina interna\",\r\n  \"sede\": \"Cali\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3003/medicos/3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3003",
+          "path": [
+            "medicos",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "EliminarPorId",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3003/medicos/4",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3003",
+          "path": [
+            "medicos",
+            "4"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Medicoinexistente",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"nombre\": \"Médico inexistente\",\r\n  \"registro_medico\": \"RM-9999\",\r\n  \"especialidad\": \"Pediatría\",\r\n  \"sede\": \"Bogotá\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3003/medicos/9999",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3003",
+          "path": [
+            "medicos",
+            "9999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "LoginAdministrador",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"admin@empresa.com\",\r\n  \"password\": \"Admin2026*\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/usuarios/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "usuarios",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "LoginAdmisiones",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"admisiones.prueba@medired.test\",\r\n  \"password\": \"ContraseñaDeAdmisiones\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/usuarios/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "usuarios",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "json_web_token_09ht",
+      "secret": true
+    }
+  ]
+}
