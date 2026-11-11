@@ -32,6 +32,8 @@ Variables del `.env`:
 | DB_USER | historias_user | Usuario de la base de datos |
 | DB_PASSWORD | (la clave) | Contraseña del usuario |
 | JWT_SECRET | (la frase del grupo) | Clave para verificar los tokens; la misma de ms-usuarios |
+| PACIENTES_URL | http://127.0.0.1:3002 | Dirección de ms-pacientes |
+| MEDICOS_URL | http://127.0.0.1:3003 | Dirección de ms-medicos |
 
 ## Seguridad
 
@@ -45,9 +47,16 @@ que entrega `POST /usuarios/login` de ms-usuarios. Sin token, o con un token inv
 
 ## Representación
 
+Así responde `GET /historias/2`. `paciente_id` y `medico_id` se guardan en la base de datos; los objetos
+`paciente` y `medico` no se guardan: se piden a ms-pacientes y ms-medicos en cada respuesta.
+
 ```json
-{ "id": 2, "paciente_id": 2, "medico_id": 2, "fecha": "2026-10-12", "motivo_consulta": "Tos y fiebre", "diagnostico": "Infección respiratoria aguda", "tratamiento": "Reposo, hidratación y control en 3 días" }
+{ "id": 2, "paciente_id": 2, "medico_id": 2, "fecha": "2026-10-12", "motivo_consulta": "Tos y fiebre", "diagnostico": "Infección respiratoria aguda", "tratamiento": "Reposo, hidratación y control en 3 días",
+  "paciente": { "id": 2, "nombre": "Miriam Lopez" },
+  "medico": { "id": 2, "nombre": "Carlos Rojas", "especialidad": "Cardiología" } }
 ```
+
+Si ms-pacientes o ms-medicos no responde, la consulta sale igual con el objeto en `null` y un campo `aviso`.
 
 ## Atributos
 
@@ -68,8 +77,8 @@ que entrega `POST /usuarios/login` de ms-usuarios. Sin token, o con un token inv
 | Listar | GET | /historias | — | 200 arreglo | — |
 | Filtrar | GET | /historias?paciente_id=1 | — | 200 arreglo filtrado | 400 paciente_id inválido |
 | Obtener | GET | /historias/:id | — | 200 objeto | 400 · 404 |
-| Crear | POST | /historias | JSON sin id | 201 objeto + Location | 400 |
-| Actualizar | PUT | /historias/:id | JSON completo sin id | 200 objeto | 400 · 404 |
+| Crear | POST | /historias | JSON sin id | 201 objeto + Location | 400 · 503 |
+| Actualizar | PUT | /historias/:id | JSON completo sin id | 200 objeto | 400 · 404 · 503 |
 | Eliminar | DELETE | /historias/:id | — | 204 | 400 · 404 |
 
 Ejemplo para crear: `POST /historias`
@@ -106,8 +115,11 @@ Errores: `{ "error": "mensaje", "detalles": ["..."] }` (detalles solo en errores
 | paciente_id | ms-pacientes | GET /pacientes/:id | GET /pacientes?ids=… | id, nombre |
 | medico_id | ms-medicos | GET /medicos/:id | GET /medicos?ids=… | id, nombre, especialidad |
 
+Si el paciente o el médico no existe: **400**. Si el otro microservicio no responde: al crear o actualizar **503**;
+al consultar, **200** con el objeto en `null` y un aviso. El token de la petición se reenvía a los dos microservicios.
+
 **Me consultan:** ninguno.
 
 ## Pruebas
 
-Colección de Postman en `docs/ms-historias.postman_collection.json`: carpeta 00 de preparación (login y usuarios de prueba), casos 1 a 13 (el 3, consulta por lotes, no aplica) y casos de seguridad 14 a 18.
+Colección de Postman en `docs/ms-historias.postman_collection.json`: carpeta 00 de preparación (login y usuarios de prueba), casos 1 a 13 (el 3, consulta por lotes, no aplica) casos de seguridad 14 a 18 y casos de relaciones 19 a 24.

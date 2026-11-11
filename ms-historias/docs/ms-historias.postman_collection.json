@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "b1642b3b-cff3-4f47-af6b-e4d84bb3a359",
     "name": "ms-historias",
-    "description": "Casos de prueba del Taller 2 de ms-historias · MediRed IPS. Correr primero la carpeta 00 (necesita ms-usuarios en 3001): guarda los tokens. Casos 01-13: CRUD (el 03, consulta por lotes, no aplica). Casos 14-18: seguridad.",
+    "description": "Casos de prueba del Taller 2 de ms-historias · MediRed IPS. Correr primero la carpeta 00 (necesita ms-usuarios en 3001). Casos 01-13: CRUD (el 03 no aplica). 14-18: seguridad. 19-24: relaciones (necesitan ms-pacientes en 3002 y ms-medicos en 3003; el 23 y el 24 con ms-pacientes detenido).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -845,6 +845,216 @@
             }
           ]
         }
+      }
+    },
+    {
+      "name": "19 - Crear con referencias válidas → 201",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 201\", () => pm.response.to.have.status(201));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"paciente_id\": 3,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-27\",\n  \"motivo_consulta\": \"Dolor abdominal\",\n  \"diagnostico\": \"Gastritis\",\n  \"tratamiento\": \"Omeprazol 20 mg en ayunas\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Requiere ms-pacientes (3002) y ms-medicos (3003) corriendo. La respuesta incluye paciente y medico."
+      }
+    },
+    {
+      "name": "20 - Crear con paciente inexistente → 400",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 400\", () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"paciente_id\": 999,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-27\",\n  \"motivo_consulta\": \"Dolor abdominal\",\n  \"diagnostico\": \"Gastritis\",\n  \"tratamiento\": \"Omeprazol 20 mg en ayunas\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "21 - Obtener por id con relaciones → 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base}}/historias/2",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias",
+            "2"
+          ]
+        },
+        "description": "La respuesta incluye paciente y medico."
+      }
+    },
+    {
+      "name": "22 - Listar (una sola petición ?ids=) → 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
+        },
+        "description": "Mirar la terminal de ms-pacientes y de ms-medicos: llega UNA petición ?ids= a cada uno."
+      }
+    },
+    {
+      "name": "23 - Listar con ms-pacientes detenido → 200",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
+        },
+        "description": "Detener ms-pacientes antes de enviar: paciente sale en null con un aviso."
+      }
+    },
+    {
+      "name": "24 - Crear con ms-pacientes detenido → 503",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Código 503\", () => pm.response.to.have.status(503));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"paciente_id\": 3,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-27\",\n  \"motivo_consulta\": \"Dolor abdominal\",\n  \"diagnostico\": \"Gastritis\",\n  \"tratamiento\": \"Omeprazol 20 mg en ayunas\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Detener ms-pacientes antes de enviar."
       }
     }
   ],
