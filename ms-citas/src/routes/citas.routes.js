@@ -4,14 +4,18 @@
 // =====================================================================
 const { Router } = require('express');
 const controller = require('../controllers/citas.controller');
-
+const { verificarToken, requiereRol } = require('../middlewares/auth');
 const router = Router();
 
-router.get('/', controller.listar);        // Listar y filtrar citas (?estado=... o ?sede=...)
-router.get('/:id', controller.obtener);    // Obtener cita por id
-router.post('/', controller.crear);        // Crear cita
+router.use(verificarToken);
 
-router.put('/:id', controller.actualizar); // Actualizar cita completa
-router.delete('/:id', controller.eliminar);// Eliminar cita
+// Lectura: administradores, admisiones y medicos
+router.get('/', controller.listar);
+router.get('/:id', controller.obtener);
+
+// Escritura: únicamente administrador y admisiones
+router.post('/', requiereRol('administrador', 'admisiones'), controller.crear);
+router.put('/:id', requiereRol('administrador', 'admisiones'), controller.actualizar);
+router.delete('/:id', requiereRol('administrador', 'admisiones'), controller.eliminar);
 
 module.exports = router;

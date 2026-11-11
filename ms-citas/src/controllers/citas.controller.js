@@ -8,50 +8,70 @@ const HttpError = require('../utils/http-error');
 
 function leerId(req) {
   const id = Number(req.params.id);
-  if (!Number.isInteger(id) || id <= 0) throw new HttpError(400, 'El id debe ser un entero positivo');
+  if (!Number.isInteger(id) || id <= 0) {
+    throw new HttpError(400, 'El id debe ser un entero positivo');
+  }
   return id;
 }
 
-// GET /citas, GET /citas?estado=programada, GET /citas?ids=1,3
 async function listar(req, res) {
-  const filtros = {
-    estado: req.query.estado,
-    sede: req.query.sede,
-  };
+  const filtros = {};
 
-  if (req.query.ids) {
-    filtros.ids = String(req.query.ids).split(',').map(Number);
-    if (filtros.ids.some((id) => !Number.isInteger(id) || id <= 0)) {
-      throw new HttpError(400, 'ids debe ser una lista de enteros separados por comas');
+  if (req.query.estado !== undefined) {
+    if (typeof req.query.estado !== 'string' || !req.query.estado.trim()) {
+      throw new HttpError(400, 'El estado debe ser un texto no vacío');
     }
+    filtros.estado = req.query.estado.trim();
   }
 
-  const citas = await service.listar(filtros);
+  if (req.query.sede !== undefined) {
+    if (typeof req.query.sede !== 'string' || !req.query.sede.trim()) {
+      throw new HttpError(400, 'La sede debe ser un texto no vacío');
+    }
+    filtros.sede = req.query.sede.trim();
+  }
+
+  if (req.query.ids !== undefined) {
+    if (typeof req.query.ids !== 'string') {
+      throw new HttpError(400, 'ids debe ser una lista de enteros positivos');
+    }
+
+    const valores = req.query.ids.split(',').map((valor) => valor.trim());
+    if (
+      valores.some(
+        (valor) =>
+          !/^[1-9]\d*$/.test(valor) ||
+          !Number.isSafeInteger(Number(valor))
+      )
+    ) {
+      throw new HttpError(400, 'ids debe contener enteros positivos separados por comas');
+    }
+
+    filtros.ids = valores.map(Number);
+  }
+
+  const citas = await service.listar(filtros, req.headers.authorization);
   res.status(200).json(citas);
 }
 
-// GET /citas/:id
 async function obtener(req, res) {
-  const cita = await service.obtener(leerId(req));
+  const cita = await service.obtener(leerId(req), req.headers.authorization);
   res.status(200).json(cita);
 }
 
-// POST /citas
 async function crear(req, res) {
-  const nueva = await service.crear(req.body);
+  const nueva = await service.crear(req.body, req.headers.authorization);
   res.status(201).location(`${req.baseUrl}/${nueva.id}`).json(nueva);
 }
 
-// PUT /citas/:id
 async function actualizar(req, res) {
-  const actualizada = await service.actualizar(leerId(req), req.body);
+  const actualizada = await service.actualizar(leerId(req), req.body, req.headers.authorization);
   res.status(200).json(actualizada);
 }
 
-// DELETE /citas/:id
 async function eliminar(req, res) {
   await service.eliminar(leerId(req));
-  res.status(204).end(); // 204 No Content: éxito sin cuerpo
+  res.status(204).end();
 }
 
 module.exports = { listar, obtener, crear, actualizar, eliminar };
