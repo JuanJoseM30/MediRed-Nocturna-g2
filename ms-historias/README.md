@@ -31,6 +31,17 @@ Variables del `.env`:
 | DB_NAME | historias_db | Base de datos |
 | DB_USER | historias_user | Usuario de la base de datos |
 | DB_PASSWORD | (la clave) | Contraseña del usuario |
+| JWT_SECRET | (la frase del grupo) | Clave para verificar los tokens; la misma de ms-usuarios |
+
+## Seguridad
+
+Todas las peticiones a `/historias` exigen la cabecera `Authorization: Bearer <token>`, con el token
+que entrega `POST /usuarios/login` de ms-usuarios. Sin token, o con un token inválido o vencido: **401**.
+
+| Operación | Roles permitidos |
+|---|---|
+| Consultar (GET) | Cualquier rol autenticado |
+| Crear, actualizar y eliminar (POST, PUT, DELETE) | administrador, medico (los demás: **403**) |
 
 ## Representación
 
@@ -99,4 +110,4 @@ Errores: `{ "error": "mensaje", "detalles": ["..."] }` (detalles solo en errores
 
 ## Pruebas
 
-Colección de Postman en `docs/ms-historias.postman_collection.json` (12 casos; el caso 3, consulta por lotes, no aplica).
+Colección de Postman en `docs/ms-historias.postman_collection.json`: carpeta 00 de preparación (login y usuarios de prueba), casos 1 a 13 (el 3, consulta por lotes, no aplica) y casos de seguridad 14 a 18.
