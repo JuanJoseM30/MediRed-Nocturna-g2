@@ -21,25 +21,25 @@ async function listar(req, res) {
       throw new HttpError(400, 'paciente_id debe ser un entero positivo');
     }
   }
-  const historias = await service.listar(filtros);
+  const historias = await service.listar(filtros, req.headers.authorization);
   res.status(200).json(historias);
 }
 
 // GET /historias/:id
 async function obtener(req, res) {
-  const historia = await service.obtener(leerId(req));
+  const historia = await service.obtener(leerId(req), req.headers.authorization);
   res.status(200).json(historia);
 }
 
 // POST /historias
 async function crear(req, res) {
-  const nueva = await service.crear(req.body);
+  const nueva = await service.crear(req.body, req.headers.authorization);
   res.status(201).location(`${req.baseUrl}/${nueva.id}`).json(nueva);
 }
 
 // PUT /historias/:id
 async function actualizar(req, res) {
-  const actualizada = await service.actualizar(leerId(req), req.body);
+  const actualizada = await service.actualizar(leerId(req), req.body, req.headers.authorization);
   res.status(200).json(actualizada);
 }
 
