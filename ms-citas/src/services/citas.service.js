@@ -69,7 +69,7 @@ async function crear(datos, token) {
   const cita = construirCita(datos);
   await validarReferencias(cita.paciente_id, cita.medico_id, token);
 
-  const solapada = await repo.findByMedicoYFecha(cita.medico_id, cita.fecha_hora);
+  const solapada = await repo.findByMedicoYFechaHora(cita.medico_id, cita.fecha_hora);
   if (solapada) {
     throw new HttpError(409, `El médico ya tiene una cita asignada en la fecha/hora ${cita.fecha_hora}`);
   }
@@ -93,7 +93,7 @@ async function actualizar(id, datos, token) {
 
   await validarReferencias(cita.paciente_id, cita.medico_id, token);
 
-  const solapada = await repo.findByMedicoYFecha(cita.medico_id, cita.fecha_hora);
+  const solapada = await repo.findByMedicoYFechaHora(cita.medico_id, cita.fecha_hora);
   if (solapada && solapada.id !== id) {
     throw new HttpError(409, `El médico ya tiene una cita asignada en la fecha/hora ${cita.fecha_hora}`);
   }
