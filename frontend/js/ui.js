@@ -72,3 +72,30 @@ function pedirDatos(titulo, campos, valores = {}, textoBoton = 'Guardar') {
 async function confirmar(texto, textoBoton) {
   return (await pedirDatos(texto, [], {}, textoBoton)) !== null;
 }
+
+// ---------------------------------------------------------------------
+// RELACIONES (citas e historias guardan paciente_id y medico_id)
+// ---------------------------------------------------------------------
+
+// Opciones para elegir paciente y médico en un formulario
+async function opcionesPacientesYMedicos() {
+  const [pacientes, medicos] = await Promise.all([api('/pacientes'), api('/medicos')]);
+  return {
+    pacientes: pacientes.map((p) => ({ valor: p.id, texto: `${p.nombre} · ${p.documento}` })),
+    medicos: medicos.map((m) => ({ valor: m.id, texto: `${m.nombre} · ${m.especialidad}` })),
+  };
+}
+
+// Muestra el objeto compuesto (paciente o médico). Si el microservicio no
+// respondió, llega null: se muestra el id para no perder el dato.
+function celdaRelacion(objeto, id, tipo, detalle) {
+  if (!objeto) return `<span class="sub">${esc(tipo)} #${esc(id)} (no disponible)</span>`;
+  return `${esc(objeto.nombre)}${detalle && objeto[detalle] ? `<span class="sub">${esc(objeto[detalle])}</span>` : ''}`;
+}
+
+// Si la respuesta trae "aviso" (degradación controlada), mostrarlo arriba de la tabla
+function pintarAvisos(lista) {
+  const avisos = [...new Set(lista.filter((x) => x.aviso).map((x) => x.aviso))];
+  document.getElementById('avisos').innerHTML = avisos
+    .map((a) => `<p class="mensaje mensaje-alerta" role="status">Aviso: ${esc(a)}</p>`).join('');
+}
