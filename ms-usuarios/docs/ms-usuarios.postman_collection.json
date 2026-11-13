@@ -1,0 +1,98 @@
+{
+  "info": {
+    "_postman_id": "1243ccde-32f3-4638-97c1-bcd52160c5d9",
+    "name": "ms-usuarios",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "59276396",
+    "_collection_link": "https://go.postman.co/collection/59276396-1243ccde-32f3-4638-97c1-bcd52160c5d9?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Login-Administrador -> 200",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"admin@medired.com\",\r\n  \"password\": \"12345678\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/usuarios/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "usuarios",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login-admisiones -> 200",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"admisiones@medired.com\",\r\n  \"password\": \"12345678\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/usuarios/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "usuarios",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login-medicos -> 200",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"medico@medired.com\",\r\n  \"password\": \"12345678\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/usuarios/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3001",
+          "path": [
+            "usuarios",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
