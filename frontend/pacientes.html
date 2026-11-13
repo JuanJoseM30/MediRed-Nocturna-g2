@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MediRed · Pacientes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="barra">
+    <div class="barra-superior">
+      <span class="marca">MediRed</span>
+      <div class="persona">
+        <span><strong id="nombre-usuario"></strong> <span class="rol" id="rol-usuario"></span></span>
+        <button id="cerrar-sesion" type="button">Cerrar sesión</button>
+      </div>
+    </div>
+    <nav id="menu" aria-label="Secciones"></nav>
+  </header>
+
+  <main>
+    <div class="cabecera-seccion">
+      <div>
+        <h1>Pacientes</h1>
+        <p class="resumen" id="resumen">Cargando…</p>
+      </div>
+      <div class="herramientas">
+        <label class="oculto" for="filtro-eps">Filtrar por EPS</label>
+        <select id="filtro-eps"></select>
+        <button class="boton" id="nuevo" hidden>Crear paciente</button>
+      </div>
+    </div>
+    <div class="tabla-envoltura">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Documento</th>
+            <th scope="col">Fecha de nacimiento</th>
+            <th scope="col">EPS</th>
+            <th scope="col">Teléfono</th>
+            <th scope="col">Estado</th>
+            <th scope="col"><span class="oculto">Acciones</span></th>
+          </tr>
+        </thead>
+        <tbody id="lista"></tbody>
+      </table>
+    </div>
+    <p class="nota" id="nota-rol" hidden>Su rol puede consultar pacientes. Crear, editar y eliminar es solo para el administrador.</p>
+  </main>
+  <div id="mensajes"></div>
+  <dialog id="dialogo"></dialog>
+
+  <script src="js/config.js"></script>
+  <script src="js/sesion.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/pacientes.js"></script>
+</body>
+</html>
