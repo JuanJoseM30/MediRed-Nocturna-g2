@@ -1,0 +1,332 @@
+/* =====================================================================
+   MediRed · estilos
+   Basados en el frontend de la docente; colores de ambiente clínico.
+   ===================================================================== */
+:root {
+  --papel: #f2f6f7;
+  --superficie: #ffffff;
+  --tinta: #16242a;
+  --tinta-suave: #55666d;
+  --linea: #d3dee2;
+  --verde: #17606d;
+  --verde-oscuro: #104852;
+  --laton: #2aa198;
+  --rojo: #a3352b;
+  --rojo-fondo: #f8e9e6;
+  --alerta-fondo: #f7f0de;
+  --radio: 6px;
+  --letra-titulo: 'Public Sans', system-ui, sans-serif;
+  --letra-texto: 'Public Sans', system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font: 16px/1.5 var(--letra-texto);
+}
+
+h1, h2, h3 { font-family: var(--letra-titulo); font-weight: 600; margin: 0; line-height: 1.2; }
+
+:focus-visible { outline: 3px solid var(--laton); outline-offset: 2px; }
+
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ---------- Botones ---------- */
+.boton {
+  font: 600 0.9rem var(--letra-texto);
+  border: 1px solid var(--verde);
+  background: var(--verde);
+  color: #fff;
+  padding: 0.55rem 1rem;
+  border-radius: var(--radio);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.boton:hover { background: var(--verde-oscuro); }
+.boton-suave { background: transparent; color: var(--verde); border-color: var(--linea); }
+.boton-suave:hover { background: #e5f0f2; }
+.boton-peligro { background: transparent; color: var(--rojo); border-color: transparent; }
+.boton-peligro:hover { background: var(--rojo-fondo); }
+
+/* ---------- Inicio de sesión ---------- */
+.entrada {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+}
+
+.sala {
+  background: var(--verde);
+  color: #fff;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+.sala h1 { font-size: clamp(2.4rem, 5vw, 3.6rem); font-weight: 500; }
+.sala p { max-width: 32ch; color: #cfe6ea; margin: 0.75rem 0 0; }
+
+/* Tarjetas decorativas: los servicios de la red */
+.servicios-deco { list-style: none; margin: 3rem 0 0; padding: 0; display: grid; gap: 0.75rem; max-width: 26rem; }
+.servicios-deco li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: var(--radio);
+  background: rgba(255, 255, 255, 0.08);
+  border-left: 4px solid var(--laton);
+}
+.servicios-deco strong { font-size: 1.05rem; }
+.servicios-deco span { font-size: 0.82rem; color: #cfe6ea; white-space: nowrap; }
+
+.acceso {
+  display: grid;
+  place-items: center;
+  padding: 2rem 1.25rem;
+}
+.acceso form { width: min(380px, 100%); }
+.acceso h2 { font-size: 1.75rem; margin-bottom: 0.25rem; }
+.acceso .indicacion { color: var(--tinta-suave); margin: 0 0 1.75rem; }
+.acceso .boton { width: 100%; padding: 0.75rem; margin-top: 0.5rem; }
+.error-acceso { color: var(--rojo); min-height: 1.5em; margin: 0.75rem 0 0; }
+
+.cuentas {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--linea);
+  font-size: 0.85rem;
+  color: var(--tinta-suave);
+}
+.cuentas ul { margin: 0.4rem 0 0; padding-left: 1.1rem; }
+.cuentas button {
+  font: inherit;
+  color: var(--verde);
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ---------- Campos de formulario ---------- */
+.campo { display: grid; gap: 0.3rem; margin-bottom: 1rem; }
+.campo span { font-size: 0.85rem; font-weight: 600; color: var(--tinta-suave); }
+.campo input, .campo select {
+  font: inherit;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  background: var(--superficie);
+  color: var(--tinta);
+  width: 100%;
+}
+.campo input:focus, .campo select:focus { border-color: var(--verde); outline: 2px solid #c3e1e5; }
+
+/* ---------- Páginas de rol ---------- */
+.barra {
+  background: var(--verde);
+  color: #fff;
+  padding: 0.9rem clamp(1rem, 4vw, 2.5rem) 0;
+}
+.barra-superior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.marca { font: 500 1.35rem var(--letra-titulo); }
+.persona { display: flex; align-items: center; gap: 0.9rem; font-size: 0.9rem; }
+.persona .rol { color: #cfe6ea; }
+.persona button {
+  font: 600 0.85rem var(--letra-texto);
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--radio);
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+}
+.modo {
+  font-size: 0.78rem;
+  background: var(--laton);
+  color: #fff;
+  border-radius: 99px;
+  padding: 0.1rem 0.6rem;
+}
+
+#menu { display: flex; gap: 0.25rem; margin-top: 0.9rem; overflow-x: auto; }
+#menu a {
+  color: #cfe6ea;
+  text-decoration: none;
+  padding: 0.6rem 0.9rem 0.7rem;
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  white-space: nowrap;
+}
+#menu a:hover { color: #fff; }
+#menu a[aria-current] { color: #fff; border-bottom-color: var(--laton); }
+
+main { max-width: 1120px; margin: 0 auto; padding: 2rem clamp(1rem, 4vw, 2.5rem) 4rem; }
+
+.cabecera-seccion {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+.cabecera-seccion h1 { font-size: 2rem; }
+.resumen { margin: 0.25rem 0 0; color: var(--tinta-suave); }
+.herramientas { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+.herramientas input[type=search] {
+  font: inherit;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  min-width: 15rem;
+  background: var(--superficie);
+}
+
+.acciones { display: flex; gap: 0.25rem; justify-content: flex-end; }
+.vacio { color: var(--tinta-suave); padding: 2rem 1rem; text-align: center; }
+
+/* ---------- Tablas (pacientes, usuarios…) ---------- */
+.tabla-envoltura {
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  overflow-x: auto;
+}
+.tabla { width: 100%; border-collapse: collapse; min-width: 640px; }
+.tabla th {
+  text-align: left;
+  font-size: 0.82rem;
+  color: var(--tinta-suave);
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--linea);
+}
+.tabla td { padding: 0.8rem 1rem; border-bottom: 1px solid #ebf1f3; vertical-align: middle; }
+.tabla tr:last-child td { border-bottom: 0; }
+.sub { display: block; color: var(--tinta-suave); font-size: 0.85rem; }
+
+/* Estado como sello (activo, inactivo, cancelada…) */
+.sello {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.1rem 0.55rem;
+  border: 1.5px solid currentColor;
+  border-radius: 4px;
+}
+.sello-activo { color: var(--verde); }
+.sello-devuelto { color: var(--tinta-suave); }
+.sello-vencido { color: var(--rojo); transform: rotate(-3deg); }
+.sello-programada { color: var(--verde); }
+.sello-atendida { color: var(--tinta-suave); }
+.sello-cancelada { color: var(--rojo); }
+
+.etiqueta-rol { font-size: 0.85rem; background: #e5f0f2; border-radius: 4px; padding: 0.1rem 0.5rem; }
+
+.filtro { display: flex; border: 1px solid var(--linea); border-radius: var(--radio); overflow: hidden; }
+.filtro button {
+  font: 600 0.85rem var(--letra-texto);
+  border: 0;
+  background: var(--superficie);
+  color: var(--tinta-suave);
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+}
+.filtro button + button { border-left: 1px solid var(--linea); }
+.filtro button[aria-pressed=true] { background: #dcebee; color: var(--verde); }
+
+/* ---------- Mensajes ---------- */
+#mensajes {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  display: grid;
+  gap: 0.5rem;
+  z-index: 20;
+  max-width: min(420px, calc(100vw - 2rem));
+}
+.mensaje {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radio);
+  background: var(--tinta);
+  color: #fff;
+  font-size: 0.92rem;
+}
+.mensaje-error { background: var(--rojo); }
+.mensaje-alerta {
+  background: var(--alerta-fondo);
+  color: #6b4f14;
+  border: 1px solid #e6d3a3;
+  margin-bottom: 1rem;
+}
+
+/* ---------- Diálogo de formularios ---------- */
+dialog {
+  border: 0;
+  border-radius: 10px;
+  padding: 1.75rem;
+  width: min(460px, calc(100vw - 2rem));
+  box-shadow: 0 20px 60px rgba(16, 72, 82, 0.25);
+}
+dialog::backdrop { background: rgba(16, 72, 82, 0.45); }
+.formulario h2 { font-size: 1.35rem; margin-bottom: 1.25rem; }
+.acciones-form { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; }
+
+/* ---------- Pantallas pequeñas ---------- */
+@media (max-width: 760px) {
+  .entrada { grid-template-columns: 1fr; }
+  .sala { padding: 1.75rem 1.25rem 0; }
+  .sala { padding-bottom: 1.75rem; }
+  .servicios-deco { display: none; }
+  .herramientas input[type=search] { min-width: 0; flex: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+
+/* ---------- Mi perfil ---------- */
+.ficha-perfil {
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  padding: 1.5rem 1.75rem;
+  max-width: 560px;
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  row-gap: 0.75rem;
+  margin: 0;
+}
+.ficha-perfil dt { color: var(--tinta-suave); font-size: 0.9rem; }
+.ficha-perfil dd { margin: 0; font-weight: 600; }
+.nota { color: var(--tinta-suave); max-width: 60ch; margin-top: 1.25rem; }
+
+/* En las tablas, la celda de acciones sigue siendo celda (no flex) */
+.tabla td.acciones { display: table-cell; text-align: right; white-space: nowrap; }
+
+/* Filtro desplegable en la cabecera de sección (ej. EPS) */
+.herramientas select {
+  font: inherit;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio);
+  background: var(--superficie);
+  color: var(--tinta);
+}
+
+/* Fechas en una sola línea dentro de las tablas */
+.tabla td.fecha { white-space: nowrap; }
