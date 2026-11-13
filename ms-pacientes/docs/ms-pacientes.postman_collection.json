@@ -111,7 +111,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/pacientes?eps=Nueva EPS",
+          "raw": "{{base_url}}/pacientes?eps=Colsanitas",
           "host": [
             "{{base_url}}"
           ],
@@ -121,7 +121,7 @@
           "query": [
             {
               "key": "eps",
-              "value": "Nueva EPS"
+              "value": "Colsanitas"
             }
           ]
         }
@@ -569,10 +569,6 @@
     {
       "key": "base_url",
       "value": "http://127.0.0.1:3002"
-    },
-    {
-      "key": "auth_secret_0mum",
-      "secret": true
     },
     {
       "key": "token_admin",
