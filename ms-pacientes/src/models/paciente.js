@@ -4,7 +4,7 @@
 // =====================================================================
 
 function epsValidas() {
-  return (process.env.EPS || 'Sura, Colsanitas, suramericana')
+  return (process.env.EPS || 'Sura,Colsanitas,Nueva EPS')
     .split(',')
     .map((e) => e.trim())
     .filter((e) => e !== '');

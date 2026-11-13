@@ -111,7 +111,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/pacientes?eps=Colsanitas",
+          "raw": "{{base_url}}/pacientes?eps=Nueva EPS",
           "host": [
             "{{base_url}}"
           ],
@@ -121,7 +121,7 @@
           "query": [
             {
               "key": "eps",
-              "value": "Colsanitas"
+              "value": "Nueva EPS"
             }
           ]
         }
@@ -368,13 +368,13 @@
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/pacientes/17",
+          "raw": "{{base_url}}/pacientes/19",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "pacientes",
-            "17"
+            "19"
           ]
         }
       },
@@ -386,13 +386,13 @@
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/pacientes/17",
+          "raw": "{{base_url}}/pacientes/19",
           "host": [
             "{{base_url}}"
           ],
           "path": [
             "pacientes",
-            "17"
+            "19"
           ]
         }
       },
@@ -426,7 +426,7 @@
           "bearer": [
             {
               "key": "token",
-              "value": "{{json_web_token_00ce}}",
+              "value": "{{token_medico}}x",
               "type": "string"
             }
           ]
@@ -571,19 +571,15 @@
       "value": "http://127.0.0.1:3002"
     },
     {
+      "key": "auth_secret_0mum",
+      "secret": true
+    },
+    {
       "key": "token_admin",
       "secret": true
     },
     {
       "key": "token_medico",
-      "secret": true
-    },
-    {
-      "key": "auth_secret_0mum",
-      "secret": true
-    },
-    {
-      "key": "json_web_token_00ce",
       "secret": true
     }
   ]
