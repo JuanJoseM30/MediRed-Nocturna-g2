@@ -1,4 +1,4 @@
-# ms-citas · Taller 2 (Completo)
+# ms-citas · Contrato de la API
 
 Redes y Servicios Multimedia · UAO · Microservicio de **citas médicas** de la aplicación **MediRed IPS**, organizado bajo **Clean Architecture** (Arquitectura Limpia).
 
