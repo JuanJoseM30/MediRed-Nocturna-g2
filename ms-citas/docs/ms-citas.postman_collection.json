@@ -45,7 +45,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3004/citas?estado=programada",
+          "raw": "http://localhost:3004/citas?sede=Cali",
           "protocol": "http",
           "host": [
             "localhost"
@@ -56,8 +56,8 @@
           ],
           "query": [
             {
-              "key": "estado",
-              "value": "programada"
+              "key": "sede",
+              "value": "Cali"
             }
           ]
         }
@@ -156,7 +156,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{ \"paciente_id\": 1, \"medico_id\": 3, \"fecha_hora\": \"2026-11-20T11:00:00\", \"sede\": \"Cali\" }",
+          "raw": "{ \"paciente_id\": 1, \"medico_id\": 3, \"fecha_hora\": \"2026-11-20T11:00:00\", \"sede\": \"Bogotá\" }",
           "options": {
             "raw": {
               "language": "json"
@@ -240,7 +240,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{ \"paciente_id\": 2, \"medico_id\": 2, \"fecha_hora\": \"2026-11-03T09:30\", \"sede\": \"Bogotá\", \"estado\": \"atendida\" }",
+          "raw": "{ \"paciente_id\": 2, \"medico_id\": 2, \"fecha_hora\": \"2026-11-03T12:30\", \"sede\": \"Bogotá\", \"estado\": \"atendida\" }",
           "options": {
             "raw": {
               "language": "json"
@@ -248,7 +248,7 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3004/citas/2",
+          "raw": "http://localhost:3004/citas/7",
           "protocol": "http",
           "host": [
             "localhost"
@@ -256,7 +256,7 @@
           "port": "3004",
           "path": [
             "citas",
-            "2"
+            "7"
           ]
         }
       },
@@ -297,7 +297,7 @@
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "http://localhost:3004/citas/4",
+          "raw": "http://localhost:3004/citas/7",
           "protocol": "http",
           "host": [
             "localhost"
@@ -305,7 +305,7 @@
           "port": "3004",
           "path": [
             "citas",
-            "4"
+            "7"
           ]
         }
       },
@@ -330,6 +330,310 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "14 GET Citas sin token -> 401",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3004/citas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "15 GET Citas token alterado -> 401",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "token_corrupto_xxx",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3004/citas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "16 GET Citas rol médico -> 200",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_0p5u}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3004/citas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "17 POST Cita rol médico -> 403",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{json_web_token_0p5u}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"paciente_id\": 1, \"medico_id\": 1, \"fecha_hora\": \"2026-11-20T10:00:00\", \"sede\": \"Cali\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3004/citas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "18 POST Cita rol admisiones -> 201",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"paciente_id\": 1, \"medico_id\": 1, \"fecha_hora\": \"2026-11-20T10:00:00\", \"sede\": \"Cali\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3004/citas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "19 POST Cita paciente/médico válido -> 201",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"paciente_id\": 1, \"medico_id\": 2, \"fecha_hora\": \"2026-11-25T08:00:00\", \"sede\": \"Cali\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3004/citas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "20 POST Cita paciente inexistente -> 400",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"paciente_id\": 999, \"medico_id\": 2, \"fecha_hora\": \"2026-11-25T09:00:00\", \"sede\": \"Cali\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3004/citas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "21 POST Cita médico inexistente - > 400",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"paciente_id\": 1, \"medico_id\": 999, \"fecha_hora\": \"2026-11-25T09:00:00\", \"sede\": \"Cali\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "22 POST Cita médico ocupado -> 409",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"paciente_id\": 2, \"medico_id\": 2, \"fecha_hora\": \"2026-11-25T08:00:00\", \"sede\": \"Cali\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "23 GET Citas composición por lotes -> 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3004/citas?ids=1,2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ],
+          "query": [
+            {
+              "key": "ids",
+              "value": "1,2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "24 POST Cita microservicio caído -> 503",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"paciente_id\": 1, \"medico_id\": 1, \"fecha_hora\": \"2026-11-26T11:00:00\", \"sede\": \"Cali\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3004/citas",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3004",
+          "path": [
+            "citas"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "json_web_token_0p5u",
+      "secret": true
     }
   ]
 }
