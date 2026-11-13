@@ -3,15 +3,19 @@
 // Aquí se registran los middlewares, las rutas y el manejo de errores.
 // =====================================================================
 const express = require('express');
+const cors = require('cors'); // ← NUEVO
 const pacientesRoutes = require('./routes/paciente.routes');
 const app = express();
+
+// CORS: permite que el frontend (abierto en el navegador) llame a este microservicio
+app.use(cors()); // ← NUEVO
 
 // Middleware: convierte el cuerpo JSON de la petición en un objeto (req.body)
 app.use(express.json());
 
 // Registro: muestra en la terminal cada petición que llega
 app.use((req, res, next) => {
-console.log(`${new Date().toLocaleTimeString()} ${req.method} ${req.originalUrl}`);
+  console.log(`${new Date().toLocaleTimeString()} ${req.method} ${req.originalUrl}`);
   next();
 });
 
