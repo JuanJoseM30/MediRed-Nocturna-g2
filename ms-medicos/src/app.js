@@ -3,9 +3,12 @@
 // Aquí se registran los middlewares, las rutas y el manejo de errores.
 // =====================================================================
 const express = require('express');
+const cors = require('cors');
 const medicosRoutes = require('./routes/medicos.routes');
 
 const app = express();
+//Corst permite el frontend abierto en el navegador
+app.use(cors());
 
 // Middleware: convierte el cuerpo JSON de la petición en un objeto (req.body)
 app.use(express.json());
