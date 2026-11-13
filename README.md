@@ -1,4 +1,4 @@
-# MEDIRED-NOCTURNO-G1
+# MEDIRED-NOCTURNO-G2
 
 Este proyecto implementa una arquitectura en capas basada en microservicios, organizada en capas independientes (controladores, servicios, modelos y repositorios) para gestionar de forma escalable la lógica de negocio y el acceso a datos de la plataforma MediRed.
 
