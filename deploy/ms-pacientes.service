@@ -1,0 +1,14 @@
+# /etc/systemd/system/ms-pacientes.service (servidor2)
+[Unit]
+Description=Microservicio pacientes - MediRed
+After=network.target
+
+[Service]
+User=nodeapps
+Group=nodeapps
+WorkingDirectory=/srv/medired/app/ms-pacientes
+ExecStart=/usr/bin/node --env-file=.env src/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
