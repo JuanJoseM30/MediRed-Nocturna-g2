@@ -5,11 +5,11 @@
 // deja de hacer falta.
 // =====================================================================
 const SERVICIOS = {
-  usuarios:  'http://localhost:3001',
-  pacientes: 'http://localhost:3002',
-  medicos:   'http://localhost:3003',
-  citas:     'http://localhost:3004',
-  historias: 'http://localhost:3005',
+  usuarios:  '/api',
+  pacientes: '/api',
+  medicos:   '/api',
+  citas:     '/api',
+  historias: '/api',
 };
 
 const ROLES = ['administrador', 'medico', 'admisiones'];
