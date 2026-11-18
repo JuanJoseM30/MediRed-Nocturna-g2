@@ -1,0 +1,15 @@
+[Unit]
+Description=Microservicio de medicos - MediRed IPS
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=nodeapps
+Group=nodeapps
+WorkingDirectory=/srv/medired/app/ms-medicos
+ExecStart=/usr/bin/node --env-file=.env src/index.js
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
