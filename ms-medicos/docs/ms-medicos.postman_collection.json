@@ -4,7 +4,7 @@
     "name": "ms-medicos - Taller 3 - gateway",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "43476995",
-    "description": "Ejecutar con Run desde el PC que resuelve app.medired.com. Antes, configurar en Postman las variables admin_password, admisiones_password y medico_password con las claves actuales; no subir esas claves a GitHub. Los tres logins guardan los tokens automaticamente. Ejecutar la coleccion en orden. El caso 18 crea un medico adicional para demostrar el permiso del administrador. La ruta /health no pasa por el gateway; se verifica localmente en servidor2."
+    "description": "Coleccion manual, sin scripts. Ejecutar primero 0a, 0b y 0c; copiar cada token a las variables token_admin, token_admisiones y token_medico. Escribir las contrasenas solo en Postman y no exportarlas al repositorio. Los casos 7 a 13 suponen tres medicos iniciales y que el nuevo medico reciba el id 4. El caso 18 crea un medico adicional."
   },
   "auth": {
     "type": "bearer",
@@ -19,35 +19,6 @@
   "item": [
     {
       "name": "0a. Login administrador -> 200",
-      "event": [
-        {
-          "listen": "prerequest",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.collectionVariables.unset('token_admin');"
-            ]
-          }
-        },
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 200', function () {",
-              "  pm.response.to.have.status(200);",
-              "});",
-              "if (pm.response.code === 200) {",
-              "  const datos = pm.response.json();",
-              "  pm.test('Entrega token', function () {",
-              "    pm.expect(datos.token).to.be.a('string').and.not.empty;",
-              "  });",
-              "  if (datos.token) pm.collectionVariables.set('token_admin', datos.token);",
-              "}"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "POST",
         "header": [
@@ -74,35 +45,6 @@
     },
     {
       "name": "0b. Login admisiones -> 200",
-      "event": [
-        {
-          "listen": "prerequest",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.collectionVariables.unset('token_admisiones');"
-            ]
-          }
-        },
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 200', function () {",
-              "  pm.response.to.have.status(200);",
-              "});",
-              "if (pm.response.code === 200) {",
-              "  const datos = pm.response.json();",
-              "  pm.test('Entrega token', function () {",
-              "    pm.expect(datos.token).to.be.a('string').and.not.empty;",
-              "  });",
-              "  if (datos.token) pm.collectionVariables.set('token_admisiones', datos.token);",
-              "}"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "POST",
         "header": [
@@ -129,35 +71,6 @@
     },
     {
       "name": "0c. Login medico -> 200",
-      "event": [
-        {
-          "listen": "prerequest",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.collectionVariables.unset('token_medico');"
-            ]
-          }
-        },
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 200', function () {",
-              "  pm.response.to.have.status(200);",
-              "});",
-              "if (pm.response.code === 200) {",
-              "  const datos = pm.response.json();",
-              "  pm.test('Entrega token', function () {",
-              "    pm.expect(datos.token).to.be.a('string').and.not.empty;",
-              "  });",
-              "  if (datos.token) pm.collectionVariables.set('token_medico', datos.token);",
-              "}"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "POST",
         "header": [
@@ -184,20 +97,6 @@
     },
     {
       "name": "1. Listar medicos -> 200",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 200', function () {",
-              "  pm.response.to.have.status(200);",
-              "});",
-              "if (pm.response.code === 200) pm.test('Devuelve una lista', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -207,20 +106,6 @@
     },
     {
       "name": "2. Filtrar por especialidad -> 200",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 200', function () {",
-              "  pm.response.to.have.status(200);",
-              "});",
-              "if (pm.response.code === 200) pm.test('Solo Pediatria', function () { pm.response.json().forEach(m => pm.expect(m.especialidad).to.eql('Pediatr\\u00eda')); });"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -230,20 +115,6 @@
     },
     {
       "name": "3. Consultar por lotes -> 200",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 200', function () {",
-              "  pm.response.to.have.status(200);",
-              "});",
-              "if (pm.response.code === 200) pm.test('Solo ids solicitados', function () { pm.response.json().forEach(m => pm.expect([1, 3]).to.include(m.id)); });"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -253,19 +124,6 @@
     },
     {
       "name": "4. Obtener medico existente -> 200",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 200', function () {",
-              "  pm.response.to.have.status(200);",
-              "});"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -275,19 +133,6 @@
     },
     {
       "name": "5. Obtener medico inexistente -> 404",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 404', function () {",
-              "  pm.response.to.have.status(404);",
-              "});"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -297,19 +142,6 @@
     },
     {
       "name": "6. Obtener con id no numerico -> 400",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 400', function () {",
-              "  pm.response.to.have.status(400);",
-              "});"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -319,37 +151,6 @@
     },
     {
       "name": "7. Crear medico -> 201",
-      "event": [
-        {
-          "listen": "prerequest",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.collectionVariables.unset('id_creado');",
-              "pm.collectionVariables.set('registro_prueba', 'RM-T3-' + Date.now() + '-' + Math.floor(Math.random() * 100000));"
-            ]
-          }
-        },
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 201', function () {",
-              "  pm.response.to.have.status(201);",
-              "});",
-              "if (pm.response.code === 201) {",
-              "  const medico = pm.response.json();",
-              "  pm.test('Devuelve id y registro', function () {",
-              "    pm.expect(medico.id).to.be.a('number');",
-              "    pm.expect(medico.registro_medico).to.eql(pm.collectionVariables.get('registro_prueba'));",
-              "  });",
-              "  if (medico.id) pm.collectionVariables.set('id_creado', String(medico.id));",
-              "}"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "POST",
         "header": [
@@ -361,7 +162,7 @@
         "url": "{{base_url}}/medicos",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"nombre\": \"Médico de prueba\",\n  \"registro_medico\": \"{{registro_prueba}}\",\n  \"especialidad\": \"Pediatría\",\n  \"sede\": \"Bogotá\"\n}",
+          "raw": "{\n  \"nombre\": \"Médico de prueba\",\n  \"registro_medico\": \"RM-T3-001\",\n  \"especialidad\": \"Pediatría\",\n  \"sede\": \"Bogotá\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -373,19 +174,6 @@
     },
     {
       "name": "8. Crear sin especialidad -> 400",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 400', function () {",
-              "  pm.response.to.have.status(400);",
-              "});"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "POST",
         "header": [
@@ -409,19 +197,6 @@
     },
     {
       "name": "9. Crear con registro repetido -> 409",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 409', function () {",
-              "  pm.response.to.have.status(409);",
-              "});"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "POST",
         "header": [
@@ -433,7 +208,7 @@
         "url": "{{base_url}}/medicos",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"nombre\": \"Otro médico\",\n  \"registro_medico\": \"{{registro_prueba}}\",\n  \"especialidad\": \"Neurología\",\n  \"sede\": \"Cali\"\n}",
+          "raw": "{\n  \"nombre\": \"Otro médico\",\n  \"registro_medico\": \"RM-T3-001\",\n  \"especialidad\": \"Neurología\",\n  \"sede\": \"Cali\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -445,19 +220,6 @@
     },
     {
       "name": "10. Actualizar medico creado -> 200",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 200', function () {",
-              "  pm.response.to.have.status(200);",
-              "});"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "PUT",
         "header": [
@@ -466,10 +228,10 @@
             "value": "application/json"
           }
         ],
-        "url": "{{base_url}}/medicos/{{id_creado}}",
+        "url": "{{base_url}}/medicos/4",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"nombre\": \"Médico actualizado\",\n  \"registro_medico\": \"{{registro_prueba}}\",\n  \"especialidad\": \"Medicina interna\",\n  \"sede\": \"Cali\"\n}",
+          "raw": "{\n  \"nombre\": \"Médico actualizado\",\n  \"registro_medico\": \"RM-T3-001\",\n  \"especialidad\": \"Medicina interna\",\n  \"sede\": \"Cali\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -481,28 +243,6 @@
     },
     {
       "name": "11. Actualizar medico inexistente -> 404",
-      "event": [
-        {
-          "listen": "prerequest",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.collectionVariables.set('registro_inexistente', 'RM-T3-NE-' + Date.now() + '-' + Math.floor(Math.random() * 100000));"
-            ]
-          }
-        },
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 404', function () {",
-              "  pm.response.to.have.status(404);",
-              "});"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "PUT",
         "header": [
@@ -514,7 +254,7 @@
         "url": "{{base_url}}/medicos/99999999",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"nombre\": \"Médico inexistente\",\n  \"registro_medico\": \"{{registro_inexistente}}\",\n  \"especialidad\": \"Pediatría\",\n  \"sede\": \"Bogotá\"\n}",
+          "raw": "{\n  \"nombre\": \"Médico inexistente\",\n  \"registro_medico\": \"RM-T3-NE\",\n  \"especialidad\": \"Pediatría\",\n  \"sede\": \"Bogotá\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -526,63 +266,24 @@
     },
     {
       "name": "12. Eliminar medico creado -> 204",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 204', function () {",
-              "  pm.response.to.have.status(204);",
-              "});"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "DELETE",
         "header": [],
-        "url": "{{base_url}}/medicos/{{id_creado}}"
+        "url": "{{base_url}}/medicos/4"
       },
       "response": []
     },
     {
       "name": "13. Eliminarlo otra vez -> 404",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 404', function () {",
-              "  pm.response.to.have.status(404);",
-              "});"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "DELETE",
         "header": [],
-        "url": "{{base_url}}/medicos/{{id_creado}}"
+        "url": "{{base_url}}/medicos/4"
       },
       "response": []
     },
     {
       "name": "14. GET sin token -> 401",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 401', function () {",
-              "  pm.response.to.have.status(401);",
-              "});"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -595,19 +296,6 @@
     },
     {
       "name": "15. GET con token alterado -> 401",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 401', function () {",
-              "  pm.response.to.have.status(401);",
-              "});"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -627,19 +315,6 @@
     },
     {
       "name": "16. GET con rol medico -> 200",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 200', function () {",
-              "  pm.response.to.have.status(200);",
-              "});"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -659,19 +334,6 @@
     },
     {
       "name": "17. POST con rol admisiones -> 403",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 403', function () {",
-              "  pm.response.to.have.status(403);",
-              "});"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "POST",
         "header": [
@@ -705,28 +367,6 @@
     },
     {
       "name": "18. POST con admin -> 201",
-      "event": [
-        {
-          "listen": "prerequest",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.collectionVariables.set('registro_seguridad', 'RM-T3-SEG-' + Date.now() + '-' + Math.floor(Math.random() * 100000));"
-            ]
-          }
-        },
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test('HTTP 201', function () {",
-              "  pm.response.to.have.status(201);",
-              "});"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "POST",
         "header": [
@@ -738,7 +378,7 @@
         "url": "{{base_url}}/medicos",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"nombre\": \"Prueba de seguridad\",\n  \"registro_medico\": \"{{registro_seguridad}}\",\n  \"especialidad\": \"Pediatría\",\n  \"sede\": \"Bogotá\"\n}",
+          "raw": "{\n  \"nombre\": \"Prueba de seguridad\",\n  \"registro_medico\": \"RM-T3-SEG\",\n  \"especialidad\": \"Pediatría\",\n  \"sede\": \"Bogotá\"\n}",
           "options": {
             "raw": {
               "language": "json"
