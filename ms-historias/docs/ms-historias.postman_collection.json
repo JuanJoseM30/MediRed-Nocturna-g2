@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "b1642b3b-cff3-4f47-af6b-e4d84bb3a359",
     "name": "ms-historias",
-    "description": "Casos de prueba de ms-historias · MediRed IPS, por el API Gateway (http://app.medired.com/api). Antes de correr: escribir en 00a, 00d y 00e el password de producción (no se sube al repositorio). En el gateway, 00b y 00c se saltan porque esos usuarios ya existen (darían 409). Casos 01-13: CRUD (el 03 no aplica). 14-18: seguridad. 19-24: relaciones; el 23 y el 24 se corren aparte, con ms-pacientes detenido.",
+    "description": "Casos de prueba de ms-historias · MediRed IPS, por el API Gateway (http://app.medired.com/api). Antes de correr: escribir en 00a, 00d y 00e el password de producción (no se sube al repositorio). Los usuarios médico y admisiones ya existen en el servidor. Casos 01-13: CRUD (el 03 no aplica: ms-historias no tiene consulta por lotes; el 12 y el 13 borran la historia 4, la que crea el 07 en una base recién creada). 14-18: seguridad. 19-24: relaciones; el 23 y el 24 se corren aparte, con ms-pacientes detenido.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -54,90 +54,6 @@
               "type": "noauth"
             },
             "description": "Guarda el token del administrador en la variable {{token}}."
-          }
-        },
-        {
-          "name": "00b - Crear usuario admisiones → 201",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Código 201 o 409\", () => pm.expect(pm.response.code).to.be.oneOf([201, 409]));"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{usuarios}}/usuarios",
-              "host": [
-                "{{usuarios}}"
-              ],
-              "path": [
-                "usuarios"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Usuario Admisiones\",\n  \"email\": \"admisiones@medired.com\",\n  \"password\": \"Admisiones2026*\",\n  \"rol\": \"admisiones\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "description": "Con el token del administrador. 409 si ya existe."
-          }
-        },
-        {
-          "name": "00c - Crear usuario medico → 201",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Código 201 o 409\", () => pm.expect(pm.response.code).to.be.oneOf([201, 409]));"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "url": {
-              "raw": "{{usuarios}}/usuarios",
-              "host": [
-                "{{usuarios}}"
-              ],
-              "path": [
-                "usuarios"
-              ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Usuario Medico\",\n  \"email\": \"medico@medired.com\",\n  \"password\": \"Medico2026*\",\n  \"rol\": \"medico\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "description": "Con el token del administrador. 409 si ya existe."
           }
         },
         {
@@ -602,13 +518,13 @@
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "{{base}}/historias/3",
+          "raw": "{{base}}/historias/4",
           "host": [
             "{{base}}"
           ],
           "path": [
             "historias",
-            "3"
+            "4"
           ]
         }
       }
@@ -630,13 +546,13 @@
         "method": "DELETE",
         "header": [],
         "url": {
-          "raw": "{{base}}/historias/3",
+          "raw": "{{base}}/historias/4",
           "host": [
             "{{base}}"
           ],
           "path": [
             "historias",
-            "3"
+            "4"
           ]
         }
       }
