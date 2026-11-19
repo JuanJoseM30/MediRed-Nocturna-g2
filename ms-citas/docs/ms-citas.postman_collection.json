@@ -18,7 +18,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"email\": \"admin@empresa.com\",\r\n  \"password\": \"MediRedAdmin2026\"\r\n}",
+          "raw": "{\r\n  \"email\": \"admin@empresa.com\",\r\n  \"password\": \"\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -52,7 +52,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"email\": \"admisiones@medired.com\",\r\n  \"password\": \"Admisiones2026Prod\"\r\n}",
+          "raw": "{\r\n  \"email\": \"admisiones@medired.com\",\r\n  \"password\": \"\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -86,7 +86,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"email\": \"medico@medired.com\",\r\n  \"password\": \"Medico2026Prod\"\r\n}",
+          "raw": "{\r\n  \"email\": \"medico@medired.com\",\r\n  \"password\": \"\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -118,7 +118,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});"
+              ""
             ]
           }
         }
