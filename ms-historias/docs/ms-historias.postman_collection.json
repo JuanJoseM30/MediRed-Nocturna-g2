@@ -1,9 +1,11 @@
 {
   "info": {
-    "_postman_id": "b1642b3b-cff3-4f47-af6b-e4d84bb3a359",
+    "_postman_id": "364570eb-edf9-4eb1-b2c5-c13bfa794df4",
     "name": "ms-historias",
-    "description": "Casos de prueba de ms-historias · MediRed IPS, por el API Gateway (http://app.medired.com/api). Antes de correr: escribir en 00a, 00d y 00e el password de producción (no se sube al repositorio). Los usuarios médico y admisiones ya existen en el servidor. Casos 01-13: CRUD (el 03 no aplica: ms-historias no tiene consulta por lotes; el 12 y el 13 borran la historia 4, la que crea el 07 en una base recién creada). 14-18: seguridad. 19-24: relaciones; el 23 y el 24 se corren aparte, con ms-pacientes detenido.",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "description": "Colección manual de ms-historias · MediRed IPS, sin scripts, por el API Gateway (http://app.medired.com/api). Correr primero 00a, 00d y 00e escribiendo el password solo en Postman (no se sube al repositorio) y copiar cada token a las variables token, token_admisiones y token_medico. Los usuarios médico y admisiones ya existen en el servidor. Casos 01-13: CRUD. El 12 y el 13 borran la historia 4, la que crea el 07 en una base recién creada. 14-18: seguridad. 19-24: relaciones; el 23 y el 24 se corren aparte, con ms-pacientes detenido.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "50141236",
+    "_collection_link": "https://go.postman.co/collection/50141236-364570eb-edf9-4eb1-b2c5-c13bfa794df4?source=collection_link"
   },
   "item": [
     {
@@ -11,19 +13,10 @@
       "item": [
         {
           "name": "00a - Login administrador → 200",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Código 200\", () => pm.response.to.have.status(200));",
-                  "pm.collectionVariables.set(\"token\", pm.response.json().token);"
-                ]
-              }
-            }
-          ],
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "POST",
             "header": [
               {
@@ -31,16 +24,6 @@
                 "value": "application/json"
               }
             ],
-            "url": {
-              "raw": "{{usuarios}}/usuarios/login",
-              "host": [
-                "{{usuarios}}"
-              ],
-              "path": [
-                "usuarios",
-                "login"
-              ]
-            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"admin@empresa.com\",\n  \"password\": \"\"\n}",
@@ -50,34 +33,6 @@
                 }
               }
             },
-            "auth": {
-              "type": "noauth"
-            },
-            "description": "Guarda el token del administrador en la variable {{token}}."
-          }
-        },
-        {
-          "name": "00d - Login admisiones → 200",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Código 200\", () => pm.response.to.have.status(200));",
-                  "pm.collectionVariables.set(\"token_admisiones\", pm.response.json().token);"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
             "url": {
               "raw": "{{usuarios}}/usuarios/login",
               "host": [
@@ -88,6 +43,23 @@
                 "login"
               ]
             },
+            "description": "Guarda el token del administrador en la variable {{token}}."
+          },
+          "response": []
+        },
+        {
+          "name": "00d - Login admisiones → 200",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"admisiones@medired.com\",\n  \"password\": \"\"\n}",
@@ -97,33 +69,6 @@
                 }
               }
             },
-            "auth": {
-              "type": "noauth"
-            }
-          }
-        },
-        {
-          "name": "00e - Login medico → 200",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.test(\"Código 200\", () => pm.response.to.have.status(200));",
-                  "pm.collectionVariables.set(\"token_medico\", pm.response.json().token);"
-                ]
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
             "url": {
               "raw": "{{usuarios}}/usuarios/login",
               "host": [
@@ -133,7 +78,23 @@
                 "usuarios",
                 "login"
               ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "00e - Login medico → 200",
+          "request": {
+            "auth": {
+              "type": "noauth"
             },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"medico@medired.com\",\n  \"password\": \"\"\n}",
@@ -143,26 +104,23 @@
                 }
               }
             },
-            "auth": {
-              "type": "noauth"
+            "url": {
+              "raw": "{{usuarios}}/usuarios/login",
+              "host": [
+                "{{usuarios}}"
+              ],
+              "path": [
+                "usuarios",
+                "login"
+              ]
             }
-          }
+          },
+          "response": []
         }
       ]
     },
     {
       "name": "01 - Listar todos → 200",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -175,21 +133,11 @@
             "historias"
           ]
         }
-      }
+      },
+      "response": []
     },
     {
       "name": "02 - Filtrar por paciente → 200",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -208,21 +156,34 @@
             }
           ]
         }
-      }
+      },
+      "response": []
+    },
+    {
+      "name": "03 - Consultar por lotes → 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base}}/historias?ids=1,2",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ],
+          "query": [
+            {
+              "key": "ids",
+              "value": "1,2"
+            }
+          ]
+        }
+      },
+      "response": []
     },
     {
       "name": "04 - Obtener existente → 200",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -236,21 +197,11 @@
             "2"
           ]
         }
-      }
+      },
+      "response": []
     },
     {
       "name": "05 - Obtener inexistente → 404",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 404\", () => pm.response.to.have.status(404));"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -264,21 +215,11 @@
             "99"
           ]
         }
-      }
+      },
+      "response": []
     },
     {
       "name": "06 - Obtener con id no numérico → 400",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 400\", () => pm.response.to.have.status(400));"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -292,21 +233,11 @@
             "abc"
           ]
         }
-      }
+      },
+      "response": []
     },
     {
       "name": "07 - Crear válido → 201",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 201\", () => pm.response.to.have.status(201));"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "POST",
         "header": [
@@ -315,15 +246,6 @@
             "value": "application/json"
           }
         ],
-        "url": {
-          "raw": "{{base}}/historias",
-          "host": [
-            "{{base}}"
-          ],
-          "path": [
-            "historias"
-          ]
-        },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"paciente_id\": 3,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-27\",\n  \"motivo_consulta\": \"Dolor abdominal\",\n  \"diagnostico\": \"Gastritis\",\n  \"tratamiento\": \"Omeprazol 20 mg en ayunas\"\n}",
@@ -332,30 +254,7 @@
               "language": "json"
             }
           }
-        }
-      }
-    },
-    {
-      "name": "08 - Crear sin datos obligatorios → 400",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 400\", () => pm.response.to.have.status(400));"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
+        },
         "url": {
           "raw": "{{base}}/historias",
           "host": [
@@ -364,7 +263,20 @@
           "path": [
             "historias"
           ]
-        },
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "08 - Crear sin datos obligatorios → 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"paciente_id\": 3\n}",
@@ -373,30 +285,7 @@
               "language": "json"
             }
           }
-        }
-      }
-    },
-    {
-      "name": "09 - Crear con fecha futura → 400",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 400\", () => pm.response.to.have.status(400));"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
+        },
         "url": {
           "raw": "{{base}}/historias",
           "host": [
@@ -405,7 +294,20 @@
           "path": [
             "historias"
           ]
-        },
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "09 - Crear con fecha futura → 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"paciente_id\": 3,\n  \"medico_id\": 2,\n  \"fecha\": \"2030-01-01\",\n  \"motivo_consulta\": \"Dolor abdominal\",\n  \"diagnostico\": \"Gastritis\",\n  \"tratamiento\": \"Omeprazol 20 mg en ayunas\"\n}",
@@ -414,22 +316,21 @@
               "language": "json"
             }
           }
+        },
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
         }
-      }
+      },
+      "response": []
     },
     {
       "name": "10 - Actualizar existente → 200",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "PUT",
         "header": [
@@ -438,6 +339,15 @@
             "value": "application/json"
           }
         ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"paciente_id\": 2,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-12\",\n  \"motivo_consulta\": \"Tos y fiebre\",\n  \"diagnostico\": \"Bronquitis aguda\",\n  \"tratamiento\": \"Jarabe y reposo por 5 días\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
         "url": {
           "raw": "{{base}}/historias/2",
           "host": [
@@ -447,31 +357,12 @@
             "historias",
             "2"
           ]
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"paciente_id\": 2,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-12\",\n  \"motivo_consulta\": \"Tos y fiebre\",\n  \"diagnostico\": \"Bronquitis aguda\",\n  \"tratamiento\": \"Jarabe y reposo por 5 días\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
         }
-      }
+      },
+      "response": []
     },
     {
       "name": "11 - Actualizar inexistente → 404",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 404\", () => pm.response.to.have.status(404));"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "PUT",
         "header": [
@@ -480,6 +371,15 @@
             "value": "application/json"
           }
         ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"paciente_id\": 2,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-12\",\n  \"motivo_consulta\": \"Tos y fiebre\",\n  \"diagnostico\": \"Bronquitis aguda\",\n  \"tratamiento\": \"Jarabe y reposo por 5 días\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
         "url": {
           "raw": "{{base}}/historias/99",
           "host": [
@@ -489,31 +389,12 @@
             "historias",
             "99"
           ]
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"paciente_id\": 2,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-12\",\n  \"motivo_consulta\": \"Tos y fiebre\",\n  \"diagnostico\": \"Bronquitis aguda\",\n  \"tratamiento\": \"Jarabe y reposo por 5 días\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
         }
-      }
+      },
+      "response": []
     },
     {
       "name": "12 - Eliminar existente → 204",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 204\", () => pm.response.to.have.status(204));"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "DELETE",
         "header": [],
@@ -527,21 +408,11 @@
             "4"
           ]
         }
-      }
+      },
+      "response": []
     },
     {
       "name": "13 - Eliminar otra vez → 404",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 404\", () => pm.response.to.have.status(404));"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "DELETE",
         "header": [],
@@ -555,22 +426,15 @@
             "4"
           ]
         }
-      }
+      },
+      "response": []
     },
     {
       "name": "14 - Petición sin token → 401",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 401\", () => pm.response.to.have.status(401));"
-            ]
-          }
-        }
-      ],
       "request": {
+        "auth": {
+          "type": "noauth"
+        },
         "method": "GET",
         "header": [],
         "url": {
@@ -581,37 +445,13 @@
           "path": [
             "historias"
           ]
-        },
-        "auth": {
-          "type": "noauth"
         }
-      }
+      },
+      "response": []
     },
     {
       "name": "15 - Token modificado → 401",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 401\", () => pm.response.to.have.status(401));"
-            ]
-          }
-        }
-      ],
       "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{base}}/historias",
-          "host": [
-            "{{base}}"
-          ],
-          "path": [
-            "historias"
-          ]
-        },
         "auth": {
           "type": "bearer",
           "bearer": [
@@ -621,23 +461,7 @@
               "type": "string"
             }
           ]
-        }
-      }
-    },
-    {
-      "name": "16 - GET con rol que solo consulta (admisiones) → 200",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
-            ]
-          }
-        }
-      ],
-      "request": {
+        },
         "method": "GET",
         "header": [],
         "url": {
@@ -648,7 +472,13 @@
           "path": [
             "historias"
           ]
-        },
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "16 - GET con rol que solo consulta (admisiones) → 200",
+      "request": {
         "auth": {
           "type": "bearer",
           "bearer": [
@@ -658,48 +488,24 @@
               "type": "string"
             }
           ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
         }
-      }
+      },
+      "response": []
     },
     {
       "name": "17 - POST con rol sin permiso (admisiones) → 403",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 403\", () => pm.response.to.have.status(403));"
-            ]
-          }
-        }
-      ],
       "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Content-Type",
-            "value": "application/json"
-          }
-        ],
-        "url": {
-          "raw": "{{base}}/historias",
-          "host": [
-            "{{base}}"
-          ],
-          "path": [
-            "historias"
-          ]
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"paciente_id\": 3,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-27\",\n  \"motivo_consulta\": \"Dolor abdominal\",\n  \"diagnostico\": \"Gastritis\",\n  \"tratamiento\": \"Omeprazol 20 mg en ayunas\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
         "auth": {
           "type": "bearer",
           "bearer": [
@@ -709,23 +515,7 @@
               "type": "string"
             }
           ]
-        }
-      }
-    },
-    {
-      "name": "18 - POST con rol con permiso (medico) → 201",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 201\", () => pm.response.to.have.status(201));"
-            ]
-          }
-        }
-      ],
-      "request": {
+        },
         "method": "POST",
         "header": [
           {
@@ -733,15 +523,6 @@
             "value": "application/json"
           }
         ],
-        "url": {
-          "raw": "{{base}}/historias",
-          "host": [
-            "{{base}}"
-          ],
-          "path": [
-            "historias"
-          ]
-        },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"paciente_id\": 3,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-27\",\n  \"motivo_consulta\": \"Dolor abdominal\",\n  \"diagnostico\": \"Gastritis\",\n  \"tratamiento\": \"Omeprazol 20 mg en ayunas\"\n}",
@@ -751,6 +532,21 @@
             }
           }
         },
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "18 - POST con rol con permiso (medico) → 201",
+      "request": {
         "auth": {
           "type": "bearer",
           "bearer": [
@@ -760,23 +556,7 @@
               "type": "string"
             }
           ]
-        }
-      }
-    },
-    {
-      "name": "19 - Crear con referencias válidas → 201",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 201\", () => pm.response.to.have.status(201));"
-            ]
-          }
-        }
-      ],
-      "request": {
+        },
         "method": "POST",
         "header": [
           {
@@ -784,15 +564,6 @@
             "value": "application/json"
           }
         ],
-        "url": {
-          "raw": "{{base}}/historias",
-          "host": [
-            "{{base}}"
-          ],
-          "path": [
-            "historias"
-          ]
-        },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"paciente_id\": 3,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-27\",\n  \"motivo_consulta\": \"Dolor abdominal\",\n  \"diagnostico\": \"Gastritis\",\n  \"tratamiento\": \"Omeprazol 20 mg en ayunas\"\n}",
@@ -802,22 +573,20 @@
             }
           }
         },
-        "description": "Requiere ms-pacientes (3002) y ms-medicos (3003) corriendo. La respuesta incluye paciente y medico."
-      }
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
+        }
+      },
+      "response": []
     },
     {
-      "name": "20 - Crear con paciente inexistente → 400",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 400\", () => pm.response.to.have.status(400));"
-            ]
-          }
-        }
-      ],
+      "name": "19 - Crear con referencias válidas → 201",
       "request": {
         "method": "POST",
         "header": [
@@ -826,6 +595,15 @@
             "value": "application/json"
           }
         ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"paciente_id\": 3,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-27\",\n  \"motivo_consulta\": \"Dolor abdominal\",\n  \"diagnostico\": \"Gastritis\",\n  \"tratamiento\": \"Omeprazol 20 mg en ayunas\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
         "url": {
           "raw": "{{base}}/historias",
           "host": [
@@ -835,6 +613,20 @@
             "historias"
           ]
         },
+        "description": "Requiere ms-pacientes (3002) y ms-medicos (3003) corriendo. La respuesta incluye paciente y medico."
+      },
+      "response": []
+    },
+    {
+      "name": "20 - Crear con paciente inexistente → 400",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
         "body": {
           "mode": "raw",
           "raw": "{\n  \"paciente_id\": 999,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-27\",\n  \"motivo_consulta\": \"Dolor abdominal\",\n  \"diagnostico\": \"Gastritis\",\n  \"tratamiento\": \"Omeprazol 20 mg en ayunas\"\n}",
@@ -843,22 +635,21 @@
               "language": "json"
             }
           }
+        },
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
         }
-      }
+      },
+      "response": []
     },
     {
       "name": "21 - Obtener por id con relaciones → 200",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -873,21 +664,11 @@
           ]
         },
         "description": "La respuesta incluye paciente y medico."
-      }
+      },
+      "response": []
     },
     {
       "name": "22 - Listar (una sola petición ?ids=) → 200",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -901,21 +682,11 @@
           ]
         },
         "description": "Mirar la terminal de ms-pacientes y de ms-medicos: llega UNA petición ?ids= a cada uno."
-      }
+      },
+      "response": []
     },
     {
       "name": "23 - Listar con ms-pacientes detenido → 200",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 200\", () => pm.response.to.have.status(200));"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "GET",
         "header": [],
@@ -929,21 +700,11 @@
           ]
         },
         "description": "Detener ms-pacientes antes de enviar: paciente sale en null con un aviso."
-      }
+      },
+      "response": []
     },
     {
       "name": "24 - Crear con ms-pacientes detenido → 503",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Código 503\", () => pm.response.to.have.status(503));"
-            ]
-          }
-        }
-      ],
       "request": {
         "method": "POST",
         "header": [
@@ -952,15 +713,6 @@
             "value": "application/json"
           }
         ],
-        "url": {
-          "raw": "{{base}}/historias",
-          "host": [
-            "{{base}}"
-          ],
-          "path": [
-            "historias"
-          ]
-        },
         "body": {
           "mode": "raw",
           "raw": "{\n  \"paciente_id\": 3,\n  \"medico_id\": 2,\n  \"fecha\": \"2026-10-27\",\n  \"motivo_consulta\": \"Dolor abdominal\",\n  \"diagnostico\": \"Gastritis\",\n  \"tratamiento\": \"Omeprazol 20 mg en ayunas\"\n}",
@@ -970,35 +722,18 @@
             }
           }
         },
+        "url": {
+          "raw": "{{base}}/historias",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "historias"
+          ]
+        },
         "description": "Detener ms-pacientes antes de enviar."
-      }
-    }
-  ],
-  "variable": [
-    {
-      "key": "base",
-      "value": "http://app.medired.com/api",
-      "type": "string"
-    },
-    {
-      "key": "usuarios",
-      "value": "http://app.medired.com/api",
-      "type": "string"
-    },
-    {
-      "key": "token",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "token_admisiones",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "token_medico",
-      "value": "",
-      "type": "string"
+      },
+      "response": []
     }
   ],
   "auth": {
@@ -1010,5 +745,27 @@
         "type": "string"
       }
     ]
-  }
+  },
+  "variable": [
+    {
+      "key": "base",
+      "value": "http://app.medired.com/api"
+    },
+    {
+      "key": "usuarios",
+      "value": "http://app.medired.com/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "token_admisiones",
+      "value": ""
+    },
+    {
+      "key": "token_medico",
+      "value": ""
+    }
+  ]
 }
