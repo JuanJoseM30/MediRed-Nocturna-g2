@@ -2,12 +2,12 @@
   "info": {
     "_postman_id": "b1642b3b-cff3-4f47-af6b-e4d84bb3a359",
     "name": "ms-historias",
-    "description": "Casos de prueba del Taller 2 de ms-historias · MediRed IPS. Correr primero la carpeta 00 (necesita ms-usuarios en 3001). Casos 01-13: CRUD (el 03 no aplica). 14-18: seguridad. 19-24: relaciones (necesitan ms-pacientes en 3002 y ms-medicos en 3003; el 23 y el 24 con ms-pacientes detenido).",
+    "description": "Casos de prueba de ms-historias · MediRed IPS, por el API Gateway (http://app.medired.com/api). Antes de correr: escribir en 00a, 00d y 00e el password de producción (no se sube al repositorio). En el gateway, 00b y 00c se saltan porque esos usuarios ya existen (darían 409). Casos 01-13: CRUD (el 03 no aplica). 14-18: seguridad. 19-24: relaciones; el 23 y el 24 se corren aparte, con ms-pacientes detenido.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "00 · Preparación (ms-usuarios en 3001)",
+      "name": "00 · Preparación (ms-usuarios)",
       "item": [
         {
           "name": "00a - Login administrador → 200",
@@ -43,7 +43,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@empresa.com\",\n  \"password\": \"Admin2026*\"\n}",
+              "raw": "{\n  \"email\": \"admin@empresa.com\",\n  \"password\": \"\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -174,7 +174,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admisiones@medired.com\",\n  \"password\": \"Admisiones2026*\"\n}",
+              "raw": "{\n  \"email\": \"admisiones@medired.com\",\n  \"password\": \"\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -220,7 +220,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"medico@medired.com\",\n  \"password\": \"Medico2026*\"\n}",
+              "raw": "{\n  \"email\": \"medico@medired.com\",\n  \"password\": \"\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1061,12 +1061,12 @@
   "variable": [
     {
       "key": "base",
-      "value": "http://localhost:3005",
+      "value": "http://app.medired.com/api",
       "type": "string"
     },
     {
       "key": "usuarios",
-      "value": "http://localhost:3001",
+      "value": "http://app.medired.com/api",
       "type": "string"
     },
     {
