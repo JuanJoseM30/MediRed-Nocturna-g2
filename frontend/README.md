@@ -1,13 +1,12 @@
 # Frontend · MediRed
 
-Inicio de sesión y pantallas de MediRed, conectadas directamente a cada microservicio.
+Inicio de sesión y pantallas de MediRed, conectadas a los microservicios a traves del API Gateway (Apache).
 HTML, CSS y JavaScript, sin framework. Basado en el frontend de usuarios de la docente.
 
 ## Cómo probarlo
 
-1. Los microservicios corriendo (`npm run dev`), cada uno con CORS activo
-   (`npm install cors` y `app.use(cors())` en `src/app.js`).
-2. Doble clic en `login.html`.
+1. El ambiente encendido: en `D:\MediRed-M2`, `vagrant up`. Los microservicios y Apache arrancan solos.
+2. Abrir **http://app.medired.com** en el navegador (con `http://`).
 3. Entrar con un usuario de ms-usuarios. Cada rol llega a su página:
 
 | Rol | Página de inicio |
@@ -38,6 +37,8 @@ la primera parte de la ruta elige el microservicio según `SERVICIOS` en `js/con
 
 ## Peticiones que hace
 
+Todas las rutas van por el gateway con el prefijo `/api` (por ejemplo `GET /api/pacientes`); el número entre paréntesis es el puerto interno del microservicio.
+
 | Pantalla | Acción | Petición |
 |---|---|---|
 | Login | Iniciar sesión | `POST /usuarios/login` (3001) |
@@ -67,5 +68,10 @@ La tabla muestra sus nombres. Si ms-pacientes o ms-medicos no responden, llegan 
 
 ## En el Taller 3
 
-En `js/config.js`, las direcciones de `SERVICIOS` pasan a ser `'/api'`: el frontend y la API
-quedan en la misma dirección a través del gateway, y CORS ya no hace falta.
+## Publicación (Taller 3)
+
+En `js/config.js` todas las direcciones de `SERVICIOS` son `'/api'`: el frontend y la API se sirven
+desde el mismo nombre (`app.medired.com`), así que CORS ya no hace falta. Para publicar un cambio en servidor2:
+
+    cd /srv/medired/app && git pull
+    sudo cp -r /srv/medired/app/frontend/* /var/www/app/
