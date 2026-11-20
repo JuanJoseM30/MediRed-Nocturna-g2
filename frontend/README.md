@@ -66,7 +66,6 @@ La tabla muestra sus nombres. Si ms-pacientes o ms-medicos no responden, llegan 
 2. Cambiar columnas, campos y rutas.
 3. Agregar la página en `MENU` de `js/config.js` con los roles que pueden verla.
 
-## En el Taller 3
 
 ## Publicación (Taller 3)
 
